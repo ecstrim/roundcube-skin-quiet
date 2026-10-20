@@ -1,8 +1,19 @@
-# roundcube-skin
+# Quiet
 
-**Quiet**, a calm skin for Roundcube Webmail 1.6 that extends Elastic. It restyles login, mail, the open message,
-compose, contacts and settings, and has a full dark mode. Install and credits: [skins/quiet/README.md](skins/quiet/README.md).
-Design and mockups: [docs/specs/2026-10-19-quiet-skin-design.md](docs/specs/2026-10-19-quiet-skin-design.md).
+A calm skin for Roundcube Webmail 1.6 that extends Elastic. It restyles login, mail, the open message, compose,
+contacts and settings, with a full dark mode and four colour schemes.
+
+## Install
+
+Requires Roundcube **1.6.x** (tested on 1.6.10) with the stock `elastic` skin present. Quiet uses CSS `:has()`,
+so it needs a current browser. Roundcube 1.7 is not supported yet.
+
+1. Copy the `skins/quiet` folder into your Roundcube's `skins/` directory, next to `skins/elastic`.
+2. In Roundcube, open Settings > Preferences > User Interface and choose **Quiet**
+   (or set `$config['skin'] = 'quiet';` for everyone).
+
+No core patches or build step needed: the compiled CSS is committed. More (dark mode, colour schemes, known
+limitations, upgrading Roundcube): [skins/quiet/README.md](skins/quiet/README.md).
 
 ## Screenshots
 
@@ -24,38 +35,11 @@ Four colour schemes, picked from the account menu: Lake blue (default, above), C
 | --- | --- | --- |
 | ![Cobalt](docs/screenshots/scheme-cobalt.png) | ![Teal](docs/screenshots/scheme-teal.png) | ![Indigo](docs/screenshots/scheme-indigo.png) |
 
-## Dev stack
+## Contributing
 
-Everything runs in Docker (no Node or PHP on the host). The stack is a throwaway GreenMail/Dovecot plus three
-Roundcube 1.6.10 containers with `skins/quiet` bind-mounted, so edits show on reload.
-
-| URL | What |
-| --- | --- |
-| http://127.0.0.1:8460 | Roundcube with the `archive` and `zipdownload` plugins (GreenMail) |
-| http://127.0.0.1:8461 | Roundcube with no plugins (GreenMail) |
-| http://127.0.0.1:8462 | Roundcube on Dovecot (IMAP THREAD works, for thread-mode tests) |
-
-Login on all of them: `klaus` / `klaus`. Only the throwaway mailboxes are involved, never real mail.
-
-The web UI binds to `127.0.0.1`. To reach it from another machine, put `QUIET_HOST=<this host's LAN IP>` in
-`dev/.env` (git-ignored) and run `make up` again.
-
-```
-make up      # start the stack
-make seed    # (re)fill the mailboxes with the fixture mail (dev/seed/seed.py)
-make css     # compile skins/quiet/styles/*.less to the committed .min.css
-make e2e     # Playwright suite in a container (ARGS="tests/e2e/list.spec.ts" to run one spec)
-make shots   # screenshots of every screen into test-results/shots/ (git-ignored)
-make down    # stop the stack
-```
-
-`make shots` writes mail, message, compose, login, contacts and settings (plus the all-headers dialog) at 1440px
-light and dark, 1024px light and 390px light and dark. Running `make e2e` clears `test-results/`, so run `make shots` last.
-`make showcase` regenerates the README screenshots in `docs/screenshots/` from a separate `demo` mailbox
-(`dev/seed/showcase.py`), so they never show test fixtures.
-
-The specs share one Roundcube user. Specs that change list prefs (sort, threads, page size) restore them, and
-`tests/e2e/global-setup.ts` plus `resetPrefs()` in `tests/e2e/helpers.ts` reset them before each run.
+The repo includes a Docker dev stack (Roundcube, throwaway test mail servers, LESS build, Playwright suite).
+See [CONTRIBUTING.md](CONTRIBUTING.md). The design spec and mockups are in
+[docs/specs/](docs/specs/2026-10-19-quiet-skin-design.md).
 
 ## Licence
 
