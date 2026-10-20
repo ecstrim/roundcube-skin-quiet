@@ -75,6 +75,36 @@ test.describe('dialogs use the card style', () => {
   }
 });
 
+test.describe('dialog footer', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  // Regression: the jqueryui plugin theme (loaded after the skin) reset the footer to padding 0 / height 4rem,
+  // so the buttons sat flush against the content above (visible on the framed About dialog).
+  const gaps = (page: Page) => page.locator('.ui-dialog:visible').evaluate((d) => {
+    const pane = d.querySelector('.ui-dialog-buttonpane')!.getBoundingClientRect();
+    const c = d.querySelector('.ui-dialog-content') as HTMLElement;
+    const contentEnd = c.getBoundingClientRect().bottom - parseFloat(getComputedStyle(c).paddingBottom);  // where its text ends
+    const btn = d.querySelector('.ui-dialog-buttonpane button')!.getBoundingClientRect();
+    return { above: Math.round(btn.top - contentEnd), below: Math.round(pane.bottom - btn.bottom) };
+  });
+
+  test('About (framed) and a confirm dialog keep the buttons off the content', async ({ page }) => {
+    await login(page);
+    await page.evaluate(() => (window as any).UI.about_dialog(document.querySelector('a.about')));
+    await expect(page.locator('.ui-dialog:visible .ui-dialog-buttonpane button').first()).toBeVisible();
+    const about = await gaps(page);
+    expect(about.above, 'About: gap above the buttons').toBeGreaterThanOrEqual(12);
+    expect(Math.abs(about.above - about.below), 'About: buttons centred in the footer').toBeLessThanOrEqual(4);
+    await page.locator('.ui-dialog:visible .ui-dialog-titlebar-close').click();
+
+    await page.evaluate(() => (window as any).rcmail.confirm_dialog('Footer test', 'delete', () => {}));
+    await expect(page.locator('.ui-dialog:visible .ui-dialog-buttonpane button').first()).toBeVisible();
+    const confirm = await gaps(page);
+    expect(confirm.above, 'confirm: gap above the buttons').toBeGreaterThanOrEqual(12);
+    expect(confirm.below, 'confirm: gap below the buttons').toBeGreaterThanOrEqual(12);
+  });
+});
+
 test.describe('narrow widths', () => {
   test('phone 390px: read, reply, delete, compose reachable', async ({ page, context }) => {
     await page.setViewportSize({ width: 390, height: 844 });

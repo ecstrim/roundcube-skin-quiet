@@ -118,7 +118,11 @@ html.dark-mode {
         &:hover { background: @quiet-bg-app; color: @quiet-text; }
     }
     .ui-dialog-content:not(.iframe) { padding: 8px 20px 12px; }
-    .ui-dialog-buttonpane {
+    // A framed page runs to its edge (no bottom padding of its own), so the footer adds the gap above the buttons
+    .ui-dialog-content.iframe + .ui-dialog-buttonpane.ui-widget-content { padding-top: 16px; }
+    // .ui-widget-content outranks the jqueryui plugin theme (loaded after the skin: padding 0 1.5rem, height 4rem)
+    .ui-dialog-buttonpane.ui-widget-content {
+        height: auto;
         margin: 0;
         padding: 4px 20px 16px;
         border-top: 0;
