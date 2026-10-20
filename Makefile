@@ -1,7 +1,7 @@
 COMPOSE := UID=$(shell id -u) GID=$(shell id -g) docker compose -f dev/compose.yml
 LESS_SRC := skins/quiet/styles/styles.less
 # Roundcube image tag of the dev stack, and the source of Elastic's LESS (see "Upgrading Roundcube" in the skin README).
-export RC_TAG ?= 1.6.10-apache
+export RC_TAG ?= 1.6.20-apache
 
 .PHONY: up down seed css e2e shots showcase deps
 

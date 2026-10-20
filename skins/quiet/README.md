@@ -14,7 +14,7 @@ Bundled third-party material: **IBM Plex Sans** (Copyright 2019 IBM Corp., SIL O
 
 ## Install
 
-Requires Roundcube **1.6.x** (developed and tested on 1.6.10) with the stock `elastic` skin present, because Quiet
+Requires Roundcube **1.6.x** (developed on 1.6.10, tested on 1.6.20) with the stock `elastic` skin present, because Quiet
 declares `"extends": "elastic"` and falls back to Elastic for everything it does not override.
 
 1. Copy the `skins/quiet` folder into your Roundcube's `skins/` directory, next to `skins/elastic`.
@@ -94,7 +94,7 @@ Quiet overrides these Elastic templates: `layout` (includes), `menu` (includes),
 1. Diff each of them against the new Elastic (`skins/elastic/templates/...`, `skins/elastic/watermark.html`) and
    carry over what changed: new elements, ids, attributes and scripts. `layout.html` must keep its stylesheet links
    (`styles.css`, `print.css`, `embed.css`), the colour-scheme script and the dark-mode early script.
-2. Rebuild the CSS against the new Elastic: `make css RC_TAG=<new image tag>` (default `1.6.10-apache`). This
+2. Rebuild the CSS against the new Elastic: `make css RC_TAG=<new image tag>` (default `1.6.20-apache`). This
    re-copies Elastic's LESS from that image into `skins/elastic/` (git-ignored; delete the folder first when the
    tag changed) and rewrites `styles/*.min.css`. Commit the result.
 3. Regenerate `styles/quiet/_glyphs.less` with `dev/glyphs/gen_glyphs.py` from the new Elastic (new or renamed

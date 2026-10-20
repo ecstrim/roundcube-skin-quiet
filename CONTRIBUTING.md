@@ -7,7 +7,7 @@ changes how the screenshots look. Contributions are accepted under the repo's li
 ## Dev stack
 
 You need Docker (with Compose v2) and `make`. Everything runs in containers (no Node or PHP on the host). The
-stack is a throwaway GreenMail/Dovecot plus three Roundcube 1.6.10 containers with `skins/quiet` bind-mounted,
+stack is a throwaway GreenMail/Dovecot plus three Roundcube 1.6.20 containers with `skins/quiet` bind-mounted,
 so edits show on reload.
 
 | URL | What |
@@ -21,11 +21,18 @@ Login on all of them: `klaus` / `klaus`. Only the throwaway mailboxes are involv
 The web UI binds to `127.0.0.1`. To reach it from another machine, put `QUIET_HOST=<this host's LAN IP>` in
 `dev/.env` (git-ignored) and run `make up` again.
 
+First run: `make up seed css e2e`, in that order. `make seed` must come before `make e2e` (the suite expects
+the fixture mail), and again after anything that empties the mailboxes. The first `make up` and `make e2e`
+download several images (Roundcube, GreenMail, Dovecot, Node, Python, Playwright), and Roundcube needs about
+15 seconds after `make up` before the URLs answer. The tests reach Roundcube over the compose network, so they
+do not use the host ports. `make css` also creates `node_modules/` and a copy of Elastic's sources in
+`skins/elastic/` (both git-ignored).
+
 ```
 make up      # start the stack
 make seed    # (re)fill the mailboxes with the fixture mail (dev/seed/seed.py)
 make css     # compile skins/quiet/styles/*.less to the committed .min.css
-make e2e     # Playwright suite in a container (ARGS="tests/e2e/list.spec.ts" to run one spec)
+make e2e     # Playwright suite in a container, ~9 min (ARGS="tests/e2e/list.spec.ts" to run one spec)
 make shots   # screenshots of every screen into test-results/shots/ (git-ignored)
 make down    # stop the stack
 ```

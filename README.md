@@ -5,7 +5,7 @@ contacts and settings, with a full dark mode and four colour schemes.
 
 ## Install
 
-Requires Roundcube **1.6.x** (tested on 1.6.10) with the stock `elastic` skin present. Quiet uses CSS `:has()`,
+Requires Roundcube **1.6.x** (tested on 1.6.20) with the stock `elastic` skin present. Quiet uses CSS `:has()`,
 so it needs a current browser. Roundcube 1.7 is not supported yet.
 
 1. Copy the `skins/quiet` folder into your Roundcube's `skins/` directory, next to `skins/elastic`.

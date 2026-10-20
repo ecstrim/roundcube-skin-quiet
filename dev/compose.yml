@@ -13,7 +13,7 @@ services:
         -Dgreenmail.auth.disabled=false
 
   roundcube:
-    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.20-apache}
     restart: unless-stopped
     depends_on: [mail]
     ports:
@@ -29,7 +29,7 @@ services:
       - ../skins/quiet:/var/www/html/skins/quiet:ro
 
   roundcube-plain:
-    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.20-apache}
     restart: unless-stopped
     depends_on: [mail]
     ports:
@@ -49,7 +49,7 @@ services:
       - dovecot-mail:/srv/mail
 
   roundcube-threads:
-    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.20-apache}
     restart: unless-stopped
     depends_on: [dovecot]
     ports:
