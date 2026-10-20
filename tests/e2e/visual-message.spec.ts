@@ -109,3 +109,32 @@ test('sender line on a phone: no separator at a wrapped line edge', async ({ bro
     await ctx.close();
   }
 });
+
+test('sender line: a line-start item never jumps back once its separator is dropped (width sweep)', async ({ browser }) => {
+  // Regression: an item that wrapped lost its "·", became narrow enough to fit the line above and moved up,
+  // leaving the item after it at a line start with a dangling separator ("DetailsHeaders / · Plain text").
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await ctx.newPage();
+  try {
+    await openFull(page, 'with-2-attachments');
+    const bad: string[] = [];
+    for (let w = 320; w <= 820; w += 6) {
+      await page.setViewportSize({ width: w, height: 844 });
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+      const list = await page.locator('.quiet-meta').evaluate((meta) => {
+        const els = Array.from(meta.querySelectorAll(':scope > :not(.header-links):not(.quiet-break), :scope > .header-links > a')) as HTMLElement[];
+        return els.map((el) => {
+          const cs = getComputedStyle(el, '::before');
+          return { top: Math.round(el.getBoundingClientRect().top), sep: cs.display !== 'none' && cs.content !== 'none' && cs.content !== 'normal', text: (el.textContent || '').trim().slice(0, 12) };
+        });
+      });
+      list.forEach((it, i) => {
+        const starts = i === 0 || it.top > list[i - 1].top + 2;
+        if (starts === it.sep) bad.push(`${w}px: "${it.text}" ${starts ? 'starts a line with' : 'follows without'} a separator`);
+      });
+    }
+    expect(bad).toEqual([]);
+  } finally {
+    await ctx.close();
+  }
+});

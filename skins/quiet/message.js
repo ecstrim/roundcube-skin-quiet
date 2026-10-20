@@ -54,15 +54,22 @@
     }
 
     // Separators lead each item of the sender meta line; the item that starts a wrapped line drops its own,
-    // so no "·" dangles at a line edge. Measured with every separator shown, so the result does not depend on itself.
+    // so no "·" dangles at a line edge. Items are measured in order with every later separator shown, and a
+    // forced break (.quiet-break) keeps a line-start item on its new line: without its "·" it is narrower and
+    // would otherwise jump back up to the end of the previous line.
     function markLineStarts() {
         var meta = document.querySelector('.quiet-meta');
         if (!meta) return;
+        $(meta).find('.quiet-break').remove();
         var items = Array.prototype.slice.call(meta.querySelectorAll(':scope > :not(.header-links), :scope > .header-links > a'));
         items.forEach(function (el) { el.classList.remove('quiet-linestart'); });
-        var tops = items.map(function (el) { return el.getBoundingClientRect().top; });
         items.forEach(function (el, i) {
-            if (i > 0 && tops[i] > tops[i - 1] + 2) el.classList.add('quiet-linestart');
+            if (i === 0 || el.getBoundingClientRect().top <= items[i - 1].getBoundingClientRect().top + 2) return;
+            var br = document.createElement('span');
+            br.className = 'quiet-break';
+            br.setAttribute('aria-hidden', 'true');
+            el.parentNode.insertBefore(br, el);
+            el.classList.add('quiet-linestart');
         });
     }
 

@@ -130,11 +130,13 @@ body.task-mail.action-show {
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
-            row-gap: 2px;
             font-size: 12px;
             line-height: 18px;
             color: @quiet-text-2;
 
+            // 20px line pitch from the items' own margins (not row-gap), so a forced break's empty line adds no gap
+            > *, > .header-links > a { margin-block: 1px; }
+            .quiet-break { flex-basis: 100%; height: 0; margin: 0 !important; }
             .quiet-to { overflow-wrap: anywhere; }
             a { color: @quiet-text-2; text-decoration: none; }
 
