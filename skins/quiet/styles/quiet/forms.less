@@ -1,0 +1,91 @@
+// Forms everywhere (contact edit, Settings, identities, dialogs): rounded controls, one stroke chevron on
+// selects, underline tabs, add-on boxes as quiet ghost parts, a soft contact-photo tile.
+
+@quiet-select-chev:      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6265' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+@quiet-select-chev-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23abacaf' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+.form-control,
+.custom-select {
+    border-radius: @quiet-radius;
+    border-color: @quiet-border-control;
+    &:focus { border-color: @quiet-accent; box-shadow: 0 0 0 3px fade(@quiet-accent, 18%); }
+}
+.custom-select {
+    padding-right: 28px;
+    background: @quiet-bg-inset @quiet-select-chev right 8px center / 12px no-repeat;
+}
+
+// Input groups: the first and last parts keep the outer radius only
+.input-group {
+    > .form-control:not(:first-child),
+    > .custom-select:not(:first-child) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+    > .form-control:not(:last-child),
+    > .custom-select:not(:last-child) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+    > .input-group-prepend.custom-select { background-color: @quiet-bg-pane-alt; color: @quiet-text; }
+    .input-group-text {
+        border-color: @quiet-border-control;
+        background-color: @quiet-bg-pane-alt;
+        color: @quiet-text-2;
+    }
+    .input-group-append:last-child .input-group-text { border-radius: 0 @quiet-radius @quiet-radius 0; }
+    a.input-group-text.delete,
+    a.input-group-text.deletebutton {
+        background-color: @quiet-bg-inset;
+        &:hover { color: @quiet-danger-text; background-color: @quiet-danger-bg; }
+    }
+}
+
+// Tabs: plain labels with an accent underline on the active one
+.nav-tabs {
+    border-bottom: 1px solid @quiet-border;
+    gap: 4px;
+    .nav-link {
+        margin-bottom: -1px;
+        padding: 8px 12px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: transparent;
+        color: @quiet-text-2;
+        &:hover { color: @quiet-text; background: transparent; border-color: transparent; border-bottom-color: @quiet-border-control; }
+        &.active { color: @quiet-text; font-weight: 500; background: transparent; border-bottom-color: @quiet-accent; }
+    }
+}
+
+// Contact photo tile
+.contact-photo #contactpic,
+.image-upload {
+    border-radius: @quiet-radius-pane;
+    background-color: @quiet-bg-app;
+    overflow: hidden;
+}
+
+html.dark-mode {
+    .form-control,
+    .custom-select {
+        border-color: @quiet-border-control-dark;
+        &:focus { border-color: @quiet-accent-text-dark; box-shadow: 0 0 0 3px fade(@quiet-accent-text-dark, 22%); }
+    }
+    .custom-select { background: @quiet-bg-inset-dark @quiet-select-chev-dark right 8px center / 12px no-repeat; }
+    .input-group {
+        > .input-group-prepend.custom-select { background-color: @quiet-bg-pane-dark; color: @quiet-text-dark; }
+        .input-group-text { border-color: @quiet-border-control-dark; background-color: @quiet-bg-pane-dark; color: @quiet-text-2-dark; }
+        a.input-group-text.delete,
+        a.input-group-text.deletebutton {
+            background-color: @quiet-bg-inset-dark;
+            &:hover { color: @quiet-danger-text-dark; background-color: @quiet-danger-bg-dark; }
+        }
+    }
+    .nav-tabs {
+        border-bottom-color: @quiet-border-dark;
+        .nav-link {
+            color: @quiet-text-2-dark;
+            background: transparent;
+            border-color: transparent;
+            &:hover { color: @quiet-text-dark; background: transparent; border-color: transparent; border-bottom-color: @quiet-border-control-dark; }
+            &.active { color: @quiet-text-dark; background: transparent; border-color: transparent; border-bottom-color: @quiet-accent-text-dark; }
+        }
+    }
+    .contact-photo #contactpic,
+    .image-upload { background-color: @quiet-bg-app-dark; }
+}

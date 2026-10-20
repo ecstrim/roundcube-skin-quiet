@@ -1,0 +1,13 @@
+From: Eve <eve@example.org>
+To: Klaus <klaus@localhost>
+Subject: Re: Fixture thread-a-2: project kickoff
+Date: Sun, 18 Oct 2026 08:40:00 +0000
+Message-ID: <thread-a-2@quiet.test>
+X-Quiet-Fixture: thread-a-2
+In-Reply-To: <thread-a-1@quiet.test>
+References: <thread-a-1@quiet.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Works for me.

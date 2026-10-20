@@ -1,0 +1,34 @@
+<roundcube:include file="includes/layout.html" />
+
+<h1 class="voice"><roundcube:object name="productname" /> <roundcube:label name="login" /></h1>
+
+<div id="layout-content" class="selected no-navbar" role="main">
+	<div id="quiet-login">
+	<roundcube:form id="login-form" name="login-form" method="post" class="propform">
+		<div id="quiet-login-brand">
+			<roundcube:if condition="config:skin_logo" />
+				<roundcube:object name="logo" src="/images/logo.svg" id="logo" alt="Logo" />
+			<roundcube:else />
+				<span id="quiet-login-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></span>
+				<span id="quiet-login-name"><roundcube:object name="productname" /></span>
+			<roundcube:endif />
+		</div>
+		<hr id="quiet-login-sep">
+		<div id="quiet-login-title"><roundcube:label name="login" /></div>
+		<roundcube:object name="loginform" form="login-form" size="40" submit=true class="form-control" />
+	</form>
+	<div id="login-footer" role="contentinfo">
+		<roundcube:object name="version" condition="config:display_product_info == 2" />
+		<roundcube:if condition="config:support_url" />
+			<a href="<roundcube:var name='config:support_url' />" target="_blank" class="support-link"><roundcube:label name="support" /></a>
+		<roundcube:endif />
+		<roundcube:container name="loginfooter" id="quiet-login-extra" />
+	</div>
+	</div>
+</div>
+
+<noscript>
+	<p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p>
+</noscript>
+
+<roundcube:include file="includes/footer.html" />

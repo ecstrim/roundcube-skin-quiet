@@ -1,0 +1,821 @@
+// Compose (mockup ComposeDark). Everything desktop-only sits behind min-width media queries and is scoped to
+// body.task-mail.action-compose; phone/tablet widths keep Elastic's compose (header toolbar, right-hand sidebar).
+
+@quiet-icon-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13'/%3E%3C/svg%3E");
+@quiet-icon-clip:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M20 11l-8.5 8.5a5 5 0 01-7-7L13 4a3.5 3.5 0 015 5l-8.5 8.5a2 2 0 01-3-3L14 7'/%3E%3C/svg%3E");
+@quiet-icon-doc:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M14 3H6v18h12V7z'/%3E%3Cpath d='M14 3v4h4'/%3E%3C/svg%3E");
+@quiet-icon-send:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M3 11l18-8-8 18-2-8z'/%3E%3C/svg%3E");
+@quiet-chip:        #e8f0fa;
+@quiet-chip-dark:   #333a44;
+@quiet-bar:         #f3f3f3;
+@quiet-bar-dark:    #2e2e2e;
+@quiet-bar-text:      #424242;
+@quiet-bar-text-dark: #c8c8c8;
+@quiet-line:        #ebebeb;
+@quiet-line-dark:   #333333;
+
+// Desktop-only pieces are invisible on phones.
+#quiet-compose-folders { display: none; }
+#quiet-editor-type-row { margin-top: .5rem; }
+.quiet-addhdrs { display: none; }
+
+.quiet-mask-icon(@img) {
+    content: "";
+    display: inline-block;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    background-color: currentColor;
+    -webkit-mask: @img center / contain no-repeat;
+    mask: @img center / contain no-repeat;
+}
+
+// ---- HTML / Plain text switch: a labelled select at the right end of the formatting bar, at every width ----
+@quiet-caret:      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%23424242' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+@quiet-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%23c8c8c8' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+
+#composebodycontainer #quiet-bar-tools {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 28px;
+
+    select.quiet-type-select {
+        -webkit-appearance: none;
+        appearance: none;
+        width: auto;
+        height: 28px;
+        margin: 0;
+        padding: 0 22px 0 8px;
+        border: 0;
+        border-radius: 4px;
+        background: transparent @quiet-caret no-repeat right 7px center / 10px 6px;
+        color: @quiet-bar-text;
+        font: 400 13px/28px @quiet-font;
+        cursor: pointer;
+        &:hover { background-color: rgba(0, 0, 0, .07); }
+        &:focus-visible { outline: 2px solid @quiet-accent-text; outline-offset: -2px; }
+    }
+}
+html.dark-mode #composebodycontainer #quiet-bar-tools select.quiet-type-select {
+    background-image: @quiet-caret-dark;
+    color: @quiet-bar-text-dark;
+    &:hover { background-color: rgba(255, 255, 255, .1); }
+    &:focus-visible { outline-color: @quiet-accent-text-dark; }
+    option { background: @quiet-bg-pane-dark; color: @quiet-text-dark; }
+}
+
+@media screen and (max-width: @screen-width-small) {
+    // Desktop strip extras: Elastic's phone header already has everything.
+    #quiet-compose-top .quiet-options,
+    #quiet-compose-top .quiet-discard { display: none !important; }
+    // Phone: the attachments row is a plain block above the editor, Attach is full width.
+    #quiet-compose-attachments {
+        margin: .5rem 1rem;
+        padding: 0;
+        border: 0;
+        .quiet-attach-hint { display: block; margin: .25rem 0; font-size: 12px; color: @quiet-text-2; }
+        .upload-form { padding: 0; }
+        &.droptarget:after { display: none; }
+    }
+    #quiet-compose-bottom a.save { margin-left: .5rem; }
+
+    // Elastic's phone compose keeps its own layout; only its colours are put on Quiet's tokens
+    // (Attach, the formatting bar, and the editor box, which stays white like on desktop).
+    body.task-mail.action-compose {
+        #quiet-attach {
+            border: 1px solid @quiet-border-control;
+            background: transparent;
+            color: @quiet-text;
+            &:hover, &:active { background: @quiet-hover; color: @quiet-text; }
+        }
+
+        #composebodycontainer {
+            // Spell is in Elastic's top toolbar on a phone
+            #quiet-spell { display: none; }
+            .editor-toolbar {
+                min-height: 34px;
+                background-color: @quiet-bar;
+                border-bottom-color: @quiet-border;
+                .mce-i-html { display: none; }
+            }
+            & > textarea.form-control,
+            & > .googie_edit_layer {
+                background-color: @quiet-mail-bg !important;
+                color: @quiet-mail-text !important;
+            }
+            div.tox.tox-tinymce {
+                .tox-toolbar-overlord > div,
+                .tox-toolbar-overlord .tox-toolbar,
+                .tox-toolbar__primary { background-color: @quiet-bar; background-image: none; }
+                .tox-toolbar:first-child > .tox-toolbar__group:first-child,
+                .tox-toolbar__primary > .tox-toolbar__group:first-child { display: none; }
+                // leave room for the switch at the right end of the first row
+                .tox-toolbar-overlord .tox-toolbar:first-child,
+                .tox-toolbar__primary { padding-right: 104px; }
+                .tox-tbtn { color: @quiet-bar-text; svg { fill: currentColor; &[style*="stroke"] { fill: none !important; } } }
+                .tox-edit-area { background: @quiet-mail-bg; }
+            }
+        }
+    }
+}
+
+html.dark-mode {
+    @media screen and (max-width: @screen-width-small) {
+        body.task-mail.action-compose {
+            #quiet-attach {
+                border-color: @quiet-border-control-dark;
+                color: @quiet-text-dark;
+                &:hover, &:active { background: @quiet-hover-dark; color: @quiet-text-dark; }
+            }
+            #composebodycontainer {
+                .editor-toolbar { background-color: @quiet-bar-dark; border-bottom-color: @quiet-border-dark; }
+                & > textarea.form-control,
+                & > .googie_edit_layer {
+                    background-color: @quiet-mail-bg !important;
+                    color: @quiet-mail-text !important;
+                }
+                div.tox.tox-tinymce {
+                    .tox-toolbar-overlord > div,
+                    .tox-toolbar-overlord .tox-toolbar,
+                    .tox-toolbar__primary { background-color: @quiet-bar-dark; background-image: none; }
+                    .tox-tbtn { color: @quiet-bar-text-dark; }
+                    .tox-edit-area { background: @quiet-mail-bg; }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-mail.action-compose {
+
+        // ---- layout: rail | folder pane | content card; the options column is a popover ----
+        #quiet-compose-folders {
+            display: flex;
+            flex-direction: column;
+            flex: 2;
+            max-width: 30%;
+            min-width: 220px;
+            width: 220px;
+            flex: 0 0 220px;
+            position: relative;
+            .quiet-newmail { cursor: pointer; }
+            .folderlist li.mailbox > a { padding-left: calc(@listing-treetoggle-width + var(--quiet-depth, 0) * 16px); }
+        }
+
+        #layout-content {
+            margin: 8px 8px 8px 0;
+            border-radius: @quiet-radius-pane;
+            overflow: hidden;
+            background-color: @quiet-bg-pane;
+        }
+
+        // Options popover (Elastic's "options and attachments" sidebar, attachments moved to their row)
+        #layout-sidebar.sidebar-right {
+            display: none !important;
+            position: fixed;
+            z-index: 10000;
+            order: 0;
+            flex: none;
+            width: 340px;
+            min-width: 0;
+            max-width: calc(100vw - 16px);
+            max-height: calc(100vh - 80px);
+            padding: 4px;
+            background-color: @quiet-bg-pane;
+            border: 1px solid @quiet-border;
+            border-radius: @quiet-radius-pane;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+            overflow: auto;
+
+            &.quiet-open { display: flex !important; flex-direction: column; }
+
+            & > .header { display: none; }
+            .scroller { padding: 8px 12px; overflow: visible; }
+            .formcontent { padding: 0; }
+            #compose-options .form-group:last-child { margin-bottom: 0; }
+        }
+
+        // ---- top strip: Signature, Responses, Options, Discard (text buttons, right-aligned) ----
+        #quiet-compose-top {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            height: auto;
+            min-height: 0;
+            padding: 10px 20px;
+            border-bottom: 1px solid @quiet-border;
+            background: transparent;
+            overflow: visible;
+
+            .task-menu-button,
+            .toolbar-menu-button,
+            .header-title,
+            #composestatusbar { display: none !important; }
+
+            // Elastic's ui.js turns the toolbar into ul#toolbar-menu > li
+            .toolbar {
+                list-style: none;
+                height: auto;
+                min-height: 0;
+                line-height: 1;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 6px;
+                width: auto;
+                margin: 0;
+                padding: 0;
+                background: transparent;
+
+                // Moved elsewhere on desktop (Save draft under the box, Attach in its row, Spell in the bar)
+                li { display: flex; align-items: center; height: auto; line-height: 1; margin: 0; padding: 0; background: transparent; border: 0; width: auto; }
+                li.spacer,
+                li.hidden-big,
+                li:has(> a.save),
+                li:has(> a.attach),
+                li:has(> .quiet-spell-orig) { display: none !important; }
+
+                a,
+                .dropbutton a {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 5px;
+                    width: auto;
+                    height: 28px;
+                    min-width: 0;
+                    padding: 0 8px;
+                    margin: 0;
+                    border: 0;
+                    border-radius: @quiet-radius;
+                    background: transparent;
+                    color: #424242;
+                    font-size: 13px;
+                    font-weight: 400;
+                    line-height: 28px;
+                    text-decoration: none;
+
+                    &:before { display: none !important; }
+                    span.inner { display: inline; position: static; padding: 0; width: auto; height: auto; clip: auto; font-size: 13px; }
+                    &:hover { background: @quiet-hover; color: @quiet-text; }
+                    &.disabled { opacity: .5; }
+                }
+
+                a.quiet-discard {
+                    margin-left: 16px;
+                    color: @quiet-danger-text;
+                    &:before { .quiet-mask-icon(@quiet-icon-trash); display: inline-block !important; }
+                    &:hover { background: @quiet-danger-bg; color: @quiet-danger-text; }
+                }
+            }
+        }
+
+        // ---- fields ----
+        #compose-content {
+            background: transparent;
+
+            & > form.formcontent,
+            & > .formcontent {
+                display: flex;
+                flex-direction: column;
+                // Takes the height left above the Send row (and scrolls when that is less than the content),
+                // so the editor box grows to the Send row and never runs under it.
+                flex: 1 1 auto;
+                min-height: 0;
+                padding: 4px 20px 0;
+                overflow-y: auto;
+            }
+        }
+
+        #compose-headers { flex: none; }
+
+        .compose-headers {
+            .form-group.row {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 12px;
+                min-height: 40px;
+                margin: 0;
+                border-bottom: 1px solid @quiet-line;
+
+                &.hidden { display: none; }
+
+                & > label {
+                    flex: 0 0 64px;
+                    width: 64px;
+                    max-width: none;
+                    padding: 0;
+                    margin: 0;
+                    color: @quiet-text-2;
+                    font-weight: 400;
+                    text-align: left;
+                }
+
+                & > div[class*="col-"] {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    max-width: none;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+            }
+
+            .input-group {
+                flex: 1 1 auto;
+                flex-wrap: nowrap;
+                min-width: 0;
+            }
+
+            .form-control,
+            select.form-control,
+            .recipient-input,
+            .custom-select {
+                border: 0 !important;
+                box-shadow: none !important;
+                background-color: transparent !important;
+                background-image: none;
+                color: @quiet-text;
+                height: 30px;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            select.form-control,
+            .custom-select { padding-right: 1.5rem; }
+
+            .recipient-input {
+                height: auto;
+                min-height: 30px;
+                padding: 3px 0;
+                gap: 6px;
+                align-items: center;
+                li.recipient {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    height: 24px;
+                    margin: 0;
+                    padding: 0 4px 0 10px;
+                    border: 0;
+                    border-radius: 12px;
+                    background: @quiet-chip;
+                    color: @quiet-text;
+                    font-size: 13px;
+                    .email { display: none; }
+                    .name { padding: 0; }
+                    a.button.remove {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 18px;
+                        height: 18px;
+                        padding: 0;
+                        margin: 0;
+                        border-radius: 50%;
+                        color: @quiet-text-2;
+                        &:hover { background: rgba(0, 0, 0, .08); }
+                    }
+                }
+                li.input input { height: 24px; padding: 0; background: transparent; color: @quiet-text; }
+            }
+
+            // Address-book picker and the per-field remove button: quiet icon buttons
+            .input-group-append {
+                .input-group-text {
+                    width: 30px;
+                    height: 30px;
+                    padding: 0;
+                    border: 0;
+                    border-radius: @quiet-radius;
+                    background: transparent;
+                    color: @quiet-text-2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    &:hover { background: @quiet-hover; color: @quiet-text; }
+                }
+            }
+            .quiet-addhdr-popup { display: none; }
+
+            #compose_subject .form-control { font-weight: 600; }
+
+            .quiet-addhdrs {
+                display: flex;
+                flex: none;
+                gap: 10px;
+                font-size: 13px;
+                a.quiet-addhdr {
+                    color: @quiet-accent-text;
+                    text-decoration: none;
+                    &:hover { text-decoration: underline; }
+                    &.quiet-gone { display: none; }
+                }
+            }
+        }
+
+        // ---- attachments row ----
+        #quiet-compose-attachments {
+            flex: none;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0;
+            padding: 10px 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            min-height: 52px;
+
+            &.droptarget:after { display: none; }
+            &.droptarget.hover { background: fade(@quiet-accent, 8%); outline: 1px dashed @quiet-accent; outline-offset: -2px; border-radius: @quiet-radius; }
+
+            .attachmentslist {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                flex: 0 1 auto;
+                max-width: 100%;
+                border: 0;
+                background: transparent;
+
+                li {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    height: 34px;
+                    margin: 0;
+                    padding: 0 6px 0 10px;
+                    border: 1px solid @quiet-border-control;
+                    border-radius: @quiet-radius;
+                    font-size: 13px;
+                    line-height: 32px;
+                    color: @quiet-text;
+
+                    &:before {
+                        content: "" !important;
+                        flex: none;
+                        width: 16px;
+                        height: 16px;
+                        margin: 0;
+                        font-family: inherit;
+                        background-color: @quiet-text-2;
+                        -webkit-mask: @quiet-icon-doc center / contain no-repeat;
+                        mask: @quiet-icon-doc center / contain no-repeat;
+                    }
+                    a.filename { flex: none; height: auto; line-height: inherit; color: @quiet-text; max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+                    .attachment-size { color: @quiet-text-2; font-size: 12px; }
+                    a.dropdown { display: none; }
+                    a.delete,
+                    a.cancelupload {
+                        position: static;
+                        order: 9;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 22px;
+                        height: 22px;
+                        padding: 0;
+                        margin: 0;
+                        border-radius: 50%;
+                        color: @quiet-text-2;
+                        font-size: 0;
+                        &:before { content: "\00d7" !important; background: none !important; -webkit-mask: none !important; mask: none !important; font-family: @quiet-font !important; font-size: 16px; line-height: 22px; height: auto; margin: 0; }
+                        &:hover { background: @quiet-hover; color: @quiet-text; }
+                        .inner { display: none; }
+                    }
+                    &.uploading, &.uploading a.filename { opacity: .7; }
+                }
+            }
+
+            .quiet-attach-hint {
+                margin-left: auto;
+                font-size: 12px;
+                color: @quiet-text-2;
+                .hint { margin: 0; text-align: right; color: inherit; }
+            }
+
+            .upload-form {
+                flex: none;
+                padding: 0;
+                text-align: left;
+                #quiet-attach {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    height: 32px;
+                    margin: 0;
+                    padding: 0 12px;
+                    border: 1px solid @quiet-border-control;
+                    border-radius: @quiet-radius;
+                    background: transparent;
+                    color: @quiet-text;
+                    font-size: 14px;
+                    font-weight: 400;
+                    &:before { .quiet-mask-icon(@quiet-icon-clip); }
+                    &:hover { background: @quiet-hover; }
+                    &:disabled { opacity: .5; }
+                }
+            }
+        }
+
+        // ---- formatting bar + body box ----
+        #composebodycontainer {
+            position: relative;
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 12px;
+            padding: 0;
+            border: 0;
+
+            // plain-text mode: Elastic's absolute .editor-toolbar becomes the bar above the box
+            .editor-toolbar {
+                position: static;
+                order: -1;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                height: 36px;
+                margin: 0 0 12px;
+                padding: 4px;
+                border: 0;
+                border-radius: @quiet-radius;
+                background-color: @quiet-bar;
+                .mce-i-html { display: none; }
+            }
+
+            & > textarea.form-control,
+            & > .googie_edit_layer {
+                flex: 1 1 300px;
+                min-height: 300px;
+                padding: 16px 20px;
+                border: 1px solid @quiet-border;
+                border-radius: @quiet-radius-pane;
+                background-color: @quiet-mail-bg !important;
+                color: @quiet-mail-text !important;
+                font-size: 14px;
+                line-height: 1.6;
+                box-shadow: none;
+            }
+
+            // HTML mode: TinyMCE's toolbar is the bar, so the plain-text one is not shown
+            .tox-tinymce + .editor-toolbar { display: none; }
+
+            // Spell button: sits in the bar's tools (see #quiet-bar-tools), left of the HTML / Plain text switch
+            #quiet-spell {
+                display: flex;
+                align-items: center;
+                height: 28px;
+                a {
+                    display: flex;
+                    align-items: center;
+                    height: 28px;
+                    padding: 0 8px;
+                    margin: 0;
+                    border: 0;
+                    border-radius: 4px;
+                    background: transparent;
+                    color: @quiet-bar-text;
+                    font-size: 12px;
+                    line-height: 28px;
+                    text-decoration: none;
+                    &:before { display: none !important; }
+                    span.inner { display: inline; position: static; width: auto; height: auto; padding: 0; clip: auto; }
+                    &:hover { background: rgba(0, 0, 0, .07); }
+                    &.pressed, &.selected { background: @quiet-sel; }
+                    &.disabled { opacity: .5; }
+                    &.dropdown {
+                        padding: 0 4px;
+                        span.inner { display: none; }
+                        &:after { content: "\25be"; font-size: 11px; background: none !important; -webkit-mask: none !important; mask: none !important; }
+                    }
+                }
+            }
+
+            // TinyMCE (HTML mode): toolbar = slim bar, edit area = the bordered white box
+            div.tox.tox-tinymce {
+                flex: 1 0 auto;
+                display: flex;
+                flex-direction: column;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+                box-shadow: none !important;
+                visibility: visible;
+
+                .tox-editor-container { flex: 1 0 auto; background: transparent; }
+                .tox-editor-header { background: transparent; border: 0; box-shadow: none; padding: 0; z-index: auto; }
+                .tox-toolbar-overlord { background: transparent; z-index: auto; }
+                .tox-toolbar-overlord > div,
+                .tox-toolbar-overlord .tox-toolbar,
+                .tox-toolbar__primary {
+                    background-image: none;
+                    background-color: @quiet-bar;
+                    border: 0;
+                }
+                // Rows: the slim bar, and (behind "More") the rest of TinyMCE's buttons
+                .tox-toolbar-overlord .tox-toolbar,
+                .tox-toolbar__primary {
+                    min-height: 36px;
+                    margin: 0 0 12px;
+                    padding: 4px;
+                    border-radius: @quiet-radius;
+                    align-items: center;
+                }
+                .tox-toolbar-overlord .tox-toolbar:first-child,
+                .tox-toolbar__primary { flex-wrap: nowrap; }
+                .tox-toolbar-overlord .tox-toolbar:not(:first-child) { display: none; }
+                &.quiet-more-open .tox-toolbar-overlord .tox-toolbar:not(:first-child) { display: flex; }
+                .tox-toolbar__group {
+                    padding: 0 4px 0 0;
+                    margin: 0;
+                    border-right: 1px solid fade(@quiet-text, 12%);
+                    height: 28px;
+                    align-items: center;
+                    &:last-child { border-right: 0; }
+                }
+                // Elastic puts the "plain text" button first; the labelled switch at the right of the bar replaces it
+                .tox-toolbar:first-child > .tox-toolbar__group:first-child,
+                .tox-toolbar__primary > .tox-toolbar__group:first-child { display: none; }
+                .tox-tbtn {
+                    width: 28px;
+                    height: 28px;
+                    margin: 0 1px;
+                    border-radius: 4px;
+                    color: @quiet-bar-text;
+                    svg { fill: currentColor; &[style*="stroke"] { fill: none !important; } }
+                    &:hover { background: rgba(0, 0, 0, .07); }
+                    &--enabled, &--enabled:hover { background: @quiet-sel; color: @quiet-accent-text; }
+                }
+                .tox-edit-area {
+                    flex: 1 0 auto;
+                    border: 1px solid @quiet-border;
+                    border-radius: @quiet-radius-pane;
+                    overflow: hidden;
+                    background: @quiet-mail-bg;
+                }
+                .tox-edit-area__iframe { background: @quiet-mail-bg; }
+            }
+        }
+
+        // ---- under the box: Send, Save draft, then the rest ----
+        #quiet-compose-bottom {
+            flex: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            padding: 0 20px 16px;
+            background: transparent;
+            border: 0;
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                height: 32px;
+                margin: 0;
+                padding: 0 12px;
+                border-radius: @quiet-radius;
+                font-size: 14px;
+                line-height: 1;
+                text-decoration: none;
+            }
+            .btn.send {
+                gap: 6px;
+                padding: 0 16px;
+                border: 0;
+                background: @quiet-accent;
+                color: #fff;
+                font-weight: 600;
+                &:before { .quiet-mask-icon(@quiet-icon-send); }
+                &:hover { background: darken(@quiet-accent, 6%); }
+            }
+            .btn.save {
+                border: 1px solid @quiet-border-control;
+                background: transparent;
+                color: @quiet-text;
+                &:before { display: none; }
+                span.inner { display: inline; padding: 0; }
+                &:hover { background: @quiet-hover; color: @quiet-text; }
+                &.disabled { opacity: .5; }
+            }
+            .float-right { margin-left: auto; float: none !important; }
+            .extwin { height: 32px; font-size: 13px; }
+        }
+    }
+}
+
+// ---- dark mode: the frame is dark, the editor box stays a white box with dark text ----
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        body.task-mail.action-compose {
+            #layout-content { background-color: @quiet-bg-pane-dark; }
+
+            #layout-sidebar.sidebar-right {
+                background-color: @quiet-bg-pane-dark;
+                border-color: @quiet-border-dark;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+            }
+
+            #quiet-compose-top {
+                border-bottom-color: @quiet-border-dark;
+                .toolbar {
+                    a, .dropbutton a {
+                        color: #c8c8c8;
+                        &:hover { background: @quiet-hover-dark; color: @quiet-text-dark; }
+                    }
+                    a.quiet-discard {
+                        color: @quiet-danger-text-dark;
+                        &:hover { background: @quiet-danger-bg-dark; color: @quiet-danger-text-dark; }
+                    }
+                }
+            }
+
+            .compose-headers {
+                .form-group.row { border-bottom-color: @quiet-line-dark; & > label { color: @quiet-text-2-dark; } }
+                .form-control, select.form-control, .recipient-input, .custom-select { color: @quiet-text-dark; }
+                .recipient-input {
+                    li.recipient {
+                        background: @quiet-chip-dark;
+                        color: @quiet-text-dark;
+                        a.button.remove { color: @quiet-text-2-dark; &:hover { background: rgba(255, 255, 255, .12); } }
+                    }
+                    li.input input { color: @quiet-text-dark; }
+                }
+                .input-group-append .input-group-text { color: @quiet-text-2-dark; &:hover { background: @quiet-hover-dark; color: @quiet-text-dark; } }
+                .quiet-addhdrs a.quiet-addhdr { color: @quiet-accent-text-dark; }
+            }
+
+            #quiet-compose-attachments {
+                &.droptarget.hover { background: fade(@quiet-accent-text-dark, 10%); outline-color: @quiet-accent-text-dark; }
+                .attachmentslist li {
+                    border-color: @quiet-border-control-dark;
+                    color: @quiet-text-dark;
+                    &:before { background-color: @quiet-text-2-dark; }
+                    a.filename { color: @quiet-text-dark; }
+                    .attachment-size { color: @quiet-text-2-dark; }
+                    a.delete, a.cancelupload { color: @quiet-text-2-dark; &:hover { background: @quiet-hover-dark; color: @quiet-text-dark; } }
+                }
+                .quiet-attach-hint { color: @quiet-text-2-dark; }
+                .upload-form #quiet-attach {
+                    border-color: @quiet-border-control-dark;
+                    color: @quiet-text-dark;
+                    &:hover { background: @quiet-hover-dark; }
+                }
+            }
+
+            #composebodycontainer {
+                .editor-toolbar {
+                    background-color: @quiet-bar-dark;
+                    .mce-i-html { color: @quiet-bar-text-dark; &:hover, &:focus { background-color: rgba(255, 255, 255, .1); } }
+                }
+                & > textarea.form-control,
+                & > .googie_edit_layer {
+                    background-color: @quiet-mail-bg !important;
+                    color: @quiet-mail-text !important;
+                    border-color: @quiet-border-dark;
+                }
+                #quiet-spell a {
+                    color: @quiet-bar-text-dark;
+                    &:hover { background: rgba(255, 255, 255, .1); }
+                    &.pressed, &.selected { background: @quiet-sel-dark; }
+                }
+                div.tox.tox-tinymce {
+                    background: transparent;
+                    .tox-toolbar-overlord > div,
+                    .tox-toolbar-overlord .tox-toolbar,
+                    .tox-toolbar__primary { background-color: @quiet-bar-dark; background-image: none; }
+                    .tox-toolbar__group { border-right-color: rgba(255, 255, 255, .14); }
+                    .tox-tbtn {
+                        color: @quiet-bar-text-dark;
+                        &:hover { background: rgba(255, 255, 255, .1); }
+                        &--enabled, &--enabled:hover { background: @quiet-sel-dark; color: @quiet-accent-text-dark; }
+                    }
+                    .tox-edit-area { border-color: @quiet-border-dark; background: @quiet-mail-bg; }
+                    .tox-edit-area__iframe { background: @quiet-mail-bg; }
+                }
+            }
+
+            #quiet-compose-bottom {
+                .btn.send { background: @quiet-accent-dark; &:hover { background: lighten(@quiet-accent-dark, 6%); } }
+                .btn.save {
+                    border-color: @quiet-border-control-dark;
+                    color: @quiet-text-dark;
+                    &:hover { background: @quiet-hover-dark; color: @quiet-text-dark; }
+                }
+            }
+        }
+    }
+}

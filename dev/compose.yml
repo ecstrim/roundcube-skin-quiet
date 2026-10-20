@@ -1,0 +1,108 @@
+# Quiet dev stack. Project name pinned so `docker compose -f dev/compose.yml` is stable.
+name: quiet-dev
+
+services:
+  mail:
+    image: greenmail/standalone:2.1.3
+    restart: unless-stopped
+    environment:
+      GREENMAIL_OPTS: >-
+        -Dgreenmail.setup.test.all
+        -Dgreenmail.hostname=0.0.0.0
+        -Dgreenmail.users=klaus:klaus
+        -Dgreenmail.auth.disabled=false
+
+  roundcube:
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    restart: unless-stopped
+    depends_on: [mail]
+    ports:
+      - "${QUIET_HOST:-127.0.0.1}:8460:80"
+    environment: &rc-env
+      ROUNDCUBEMAIL_DB_TYPE: sqlite
+      ROUNDCUBEMAIL_DEFAULT_HOST: mail
+      ROUNDCUBEMAIL_DEFAULT_PORT: "3143"
+      ROUNDCUBEMAIL_SMTP_SERVER: mail
+      ROUNDCUBEMAIL_SMTP_PORT: "3025"
+    volumes:
+      - ./roundcube/config/quiet.inc.php:/var/roundcube/config/quiet.inc.php:ro
+      - ../skins/quiet:/var/www/html/skins/quiet:ro
+
+  roundcube-plain:
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    restart: unless-stopped
+    depends_on: [mail]
+    ports:
+      - "${QUIET_HOST:-127.0.0.1}:8461:80"
+    environment: *rc-env
+    volumes:
+      - ./roundcube/config-plain/quiet.inc.php:/var/roundcube/config/quiet.inc.php:ro
+      - ../skins/quiet:/var/www/html/skins/quiet:ro
+
+  # Thread-capable IMAP (Dovecot has THREAD, GreenMail does not) for the thread-mode tests.
+  dovecot:
+    image: dovecot/dovecot:2.3.21.1
+    restart: unless-stopped
+    volumes:
+      - ./dovecot/dovecot.conf:/etc/dovecot/dovecot.conf:ro
+      - ./dovecot/users:/etc/dovecot/users:ro
+      - dovecot-mail:/srv/mail
+
+  roundcube-threads:
+    image: roundcube/roundcubemail:${RC_TAG:-1.6.10-apache}
+    restart: unless-stopped
+    depends_on: [dovecot]
+    ports:
+      - "${QUIET_HOST:-127.0.0.1}:8462:80"
+    environment:
+      ROUNDCUBEMAIL_DB_TYPE: sqlite
+      ROUNDCUBEMAIL_DEFAULT_HOST: dovecot
+      ROUNDCUBEMAIL_DEFAULT_PORT: "143"
+    volumes:
+      - ./roundcube/config/quiet.inc.php:/var/roundcube/config/quiet.inc.php:ro
+      - ../skins/quiet:/var/www/html/skins/quiet:ro
+
+  # One-shot tools, run with `docker compose run --rm <name>`.
+  seed:
+    image: python:3.12-alpine
+    profiles: [tools]
+    restart: "no"
+    depends_on: [mail, dovecot]
+    working_dir: /seed
+    volumes:
+      - ./seed:/seed:ro
+    command: ["python", "seed.py"]
+    environment:
+      IMAP_HOST: mail
+      IMAP_PORT: "3143"
+
+  node:
+    image: node:22-alpine
+    profiles: [tools]
+    restart: "no"
+    working_dir: /work
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      HOME: /tmp
+    volumes:
+      - ..:/work
+
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.61.0-noble
+    profiles: [tools]
+    restart: "no"
+    working_dir: /work
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      HOME: /tmp
+      BASE_URL: http://roundcube
+      BASE_URL_PLAIN: http://roundcube-plain
+      BASE_URL_THREADS: http://roundcube-threads
+      # host:port pairs the tests use to re-seed a mailbox (python3 dev/seed/seed.py)
+      SEED_IMAP: mail:3143
+      SEED_IMAP_THREADS: dovecot:143
+    volumes:
+      - ..:/work
+
+volumes:
+  dovecot-mail:

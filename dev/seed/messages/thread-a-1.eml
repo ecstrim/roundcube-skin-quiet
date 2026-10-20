@@ -1,0 +1,11 @@
+From: Dave <dave@example.org>
+To: Klaus <klaus@localhost>
+Subject: Fixture thread-a-1: project kickoff
+Date: Sun, 18 Oct 2026 08:30:00 +0000
+Message-ID: <thread-a-1@quiet.test>
+X-Quiet-Fixture: thread-a-1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Kickoff on Monday.

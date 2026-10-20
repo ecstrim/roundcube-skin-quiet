@@ -1,0 +1,91 @@
+// Bootstrap/Elastic buttons (.btn): dialogs, Settings and Contacts forms, error pages, plugin screens.
+// Same family as the message actions: 6px radius, flat, primary = accent fill, secondary = outlined,
+// danger = the Delete tint. Dialog and form buttons are text-only (Elastic's glyph is dropped there).
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: @quiet-radius;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    box-shadow: none !important;
+
+    &:focus-visible { outline: 2px solid @quiet-accent-text; outline-offset: 2px; }
+    &:disabled, &.disabled { opacity: .5; }
+}
+
+.btn-primary,
+.btn-primary:not(:disabled):not(.disabled):active {
+    background-color: @quiet-accent;
+    border-color: @quiet-accent;
+    color: #fff;
+}
+.btn-primary:hover:not(:disabled),
+.btn-primary:focus { background-color: darken(@quiet-accent, 6%); border-color: darken(@quiet-accent, 6%); color: #fff; }
+
+.btn-secondary,
+.btn-secondary:not(:disabled):not(.disabled):active {
+    background-color: @quiet-bg-inset;
+    border-color: @quiet-border-control;
+    color: @quiet-text;
+}
+.btn-secondary:hover:not(:disabled),
+.btn-secondary:focus { background-color: @quiet-bg-app; border-color: @quiet-border-control; color: @quiet-text; }
+
+.btn-danger,
+.btn-danger:not(:disabled):not(.disabled):active {
+    background-color: @quiet-danger-bg;
+    border-color: @quiet-danger-border;
+    color: @quiet-danger-text;
+}
+.btn-danger:hover:not(:disabled),
+.btn-danger:focus { background-color: darken(@quiet-danger-bg, 4%); border-color: @quiet-danger-text; color: @quiet-danger-text; }
+
+// Text-only in dialogs and form footers
+.ui-dialog-buttonpane .btn:before,
+.formbuttons .btn:before { display: none !important; }
+
+html.dark-mode {
+    .btn:focus-visible { outline-color: @quiet-accent-text-dark; }
+
+    .btn-primary,
+    .btn-primary:not(:disabled):not(.disabled):active { background-color: @quiet-accent-dark; border-color: @quiet-accent-dark; color: #fff; }
+    .btn-primary:hover:not(:disabled),
+    .btn-primary:focus { background-color: lighten(@quiet-accent-dark, 5%); border-color: lighten(@quiet-accent-dark, 5%); color: #fff; }
+
+    .btn-secondary,
+    .btn-secondary:not(:disabled):not(.disabled):active { background-color: @quiet-bg-pane-dark; border-color: @quiet-border-control-dark; color: @quiet-text-dark; }
+    .btn-secondary:hover:not(:disabled),
+    .btn-secondary:focus { background-color: @quiet-bg-app-dark; border-color: @quiet-border-control-dark; color: @quiet-text-dark; }
+
+    .btn-danger,
+    .btn-danger:not(:disabled):not(.disabled):active { background-color: @quiet-danger-bg-dark; border-color: @quiet-danger-border-dark; color: @quiet-danger-text-dark; }
+    .btn-danger:hover:not(:disabled),
+    .btn-danger:focus { background-color: lighten(@quiet-danger-bg-dark, 4%); border-color: @quiet-danger-text-dark; color: @quiet-danger-text-dark; }
+}
+
+// Native radios and checkboxes (Settings "Skin", plugin forms): the scheme's accent, not the browser's blue.
+input[type="radio"],
+input[type="checkbox"] { accent-color: @quiet-accent; }
+html.dark-mode input[type="radio"],
+html.dark-mode input[type="checkbox"] { accent-color: @quiet-accent-text-dark; }
+
+// Phone compose button: the accent disc with a soft drop shadow instead of Elastic's light-blue glow.
+.floating-action-buttons a.button {
+    opacity: 1;
+    background: @quiet-accent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+html.dark-mode .floating-action-buttons a.button { background: @quiet-accent-dark; box-shadow: 0 2px 8px rgba(0, 0, 0, .6); }
+
+// Phone dialogs: Elastic lays the footer buttons edge to edge; keep the focus ring inside them.
+html.layout-phone .ui-dialog-buttonpane .btn:focus-visible { outline-offset: -4px; }
+
+// About: version and licence cells stay on one line.
+#pluginlist td.version,
+#pluginlist td.license { white-space: nowrap; }

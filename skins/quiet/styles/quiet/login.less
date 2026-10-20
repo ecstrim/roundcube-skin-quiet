@@ -1,0 +1,169 @@
+// Login (mockup LoginL1): centered card on the app background. Scoped to body.task-login (also the
+// session-expired login page); error pages keep Elastic's look.
+
+body.task-login {
+    background-color: @quiet-bg-app;
+    color: @quiet-text;
+    font-family: @quiet-font;
+
+    #layout {
+        background-color: @quiet-bg-app;
+    }
+
+    #layout-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+        padding: 16px;
+        text-align: left;
+        background: transparent;
+    }
+
+    #quiet-login {
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    #login-form {
+        top: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        box-sizing: border-box;
+        padding: 36px 36px 28px;
+        border-radius: 10px;
+        background: @quiet-bg-pane;
+        border: 1px solid @quiet-border;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        // Elastic's table-ish form: make it a plain column.
+        // Elastic's ui.js hides the label cell inline and adds an icon prepend + placeholder: undo that.
+        table, tbody, tr, td { display: block; width: 100%; }
+        table { margin: 0; }
+        tr { margin: 0 0 16px; }
+        td { padding: 0; }
+        td.title { display: block !important; padding-bottom: 6px; }
+        .input-group { display: block; width: 100%; }
+        .input-group-prepend { display: none; }
+        ::placeholder { color: transparent; }
+        td.title label, label {
+            font-size: 13px;
+            font-weight: normal;
+            color: @quiet-text-2;
+            margin: 0;
+        }
+        input.form-control, select.custom-select {
+            display: block;
+            width: 100%;
+            height: 36px;
+            padding: 0 10px;
+            font: inherit;
+            font-size: 14px;
+            border: 1px solid @quiet-border-control;
+            border-radius: 6px;
+            background-color: @quiet-bg-inset;
+            color: @quiet-text;
+            box-shadow: none;
+        }
+        input.form-control:focus {
+            border-color: @quiet-accent;
+            box-shadow: 0 0 0 1px @quiet-accent;
+        }
+        .formbuttons {
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+        #rcmloginsubmit {
+            width: 100%;
+            height: 38px;
+            margin: 8px 0 0;
+            border: 0;
+            border-radius: 6px;
+            background: @quiet-accent;
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: none !important;
+            &:hover, &:focus { background: darken(@quiet-accent, 6%); color: #fff; }
+        }
+    }
+
+    #quiet-login-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        #logo { position: static; max-height: 36px; max-width: 100%; }
+    }
+    #quiet-login-icon {
+        width: 36px;
+        height: 36px;
+        flex: none;
+        border-radius: 8px;
+        background: @quiet-accent;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #quiet-login-name { font-size: 18px; font-weight: 600; }
+    #quiet-login-sep {
+        width: 100%;
+        border: 0;
+        border-top: 1px solid @quiet-border;
+        margin: 8px 0 0;
+    }
+    #quiet-login-title { font-size: 22px; font-weight: 600; margin-top: 12px; }
+
+    #login-footer {
+        flex: none;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 12px;
+        color: @quiet-text-2;
+        a { color: @quiet-text-2; }
+        a:hover { color: @quiet-accent-text; }
+        & > div { margin-top: 0; }
+    }
+}
+
+html.dark-mode body.task-login {
+    background-color: @quiet-bg-app-dark;
+    color: @quiet-text-dark;
+
+    #layout { background-color: @quiet-bg-app-dark; }
+    #login-form {
+        background: @quiet-bg-pane-dark;
+        border-color: @quiet-border-dark;
+        label, td.title label { color: @quiet-text-2-dark; }
+        input.form-control, select.custom-select {
+            background-color: @quiet-bg-inset-dark;
+            border-color: @quiet-border-control-dark;
+            color: @quiet-text-dark;
+        }
+        input.form-control:focus { border-color: @quiet-accent-dark; box-shadow: 0 0 0 1px @quiet-accent-dark; }
+        #rcmloginsubmit {
+            background: @quiet-accent-dark;
+            &:hover, &:focus { background: lighten(@quiet-accent-dark, 4%); }
+        }
+    }
+    #quiet-login-icon { background: @quiet-accent-dark; }
+    #quiet-login-sep { border-top-color: @quiet-border-dark; }
+    #login-footer {
+        color: @quiet-text-2-dark;
+        a { color: @quiet-text-2-dark; }
+        a:hover { color: @quiet-accent-text-dark; }
+    }
+}

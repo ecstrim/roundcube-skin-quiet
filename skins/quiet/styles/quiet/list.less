@@ -1,0 +1,681 @@
+// Message list: header (search, folder title, filter, options, multibar slot) and rows.
+// Desktop only (> @screen-width-small); phone/tablet keep Elastic's header and toolbars.
+
+@quiet-hover:      #f5f5f5;
+@quiet-hover-dark: #2e2e2e;
+@quiet-input-bg:      #f5f5f5;
+@quiet-input-bg-dark: #1f1f1f;
+@quiet-row-line:      #f0f0f0;
+@quiet-row-line-dark: #303030;
+
+@quiet-icon-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Ccircle cx='5' cy='12' r='2'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='19' cy='12' r='2'/%3E%3C/svg%3E");
+@quiet-icon-refresh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M20 12a8 8 0 1 1-2.5-5.8M20 4v5h-5'/%3E%3C/svg%3E");
+// Row quick actions (mockup QuietB, hovered row).
+@quiet-icon-delete:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13'/%3E%3C/svg%3E");
+@quiet-icon-archive: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Crect x='3' y='4' width='18' height='5' rx='1'/%3E%3Cpath d='M5 9v10h14V9M10 13h4'/%3E%3C/svg%3E");
+@quiet-icon-flag:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M5 21V4M5 4h12l-2 4 2 4H5'/%3E%3C/svg%3E");
+@quiet-icon-flag-on: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.8'%3E%3Cpath d='M5 21V4M5 4h12l-2 4 2 4H5'/%3E%3C/svg%3E");
+@quiet-icon-mail:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3 7l9 6 9-6'/%3E%3C/svg%3E");
+@quiet-icon-mail-open: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M3 10l9-6 9 6v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z'/%3E%3Cpath d='M3 10l9 6 9-6'/%3E%3C/svg%3E");
+@quiet-row-btn:      #424242;
+@quiet-row-btn-hover:      rgba(0, 0, 0, .06);
+@quiet-row-btn-hover-dark: rgba(255, 255, 255, .1);
+@quiet-icon-move:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M3 6h6l2 2h10v11H3z'/%3E%3Cpath d='M11 14h6M14 11l3 3-3 3'/%3E%3C/svg%3E");
+@quiet-row-actions-w: 134px;  // 4 x 32px + 3 x 2px gap
+
+// Below desktop width the title row only carries the filter and options (the title is in Elastic's header,
+// and the refresh button is in the header too).
+.quiet-list-titlerow {
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px 8px;
+    .quiet-folder-title,
+    .quiet-refresh,
+    .quiet-list-options { display: none; }
+    .quiet-list-controls { display: flex; align-items: center; gap: 4px; }
+    select.quiet-filter { width: auto; max-width: 60vw; }
+    label.voice { position: absolute; }
+}
+// Multi-select bar and the reading-pane empty state are desktop-only (shown below).
+#quiet-multibar,
+.quiet-empty { display: none; }
+// Row quick actions are a desktop pointer feature (shown below, in the desktop block).
+.quiet-row-actions { display: none; }
+.quiet-menu-label {
+    padding: .4rem 1rem .1rem;
+    font-size: 12px;
+    color: @quiet-text-2;
+    &:empty { padding: 0; margin: .25rem 0; border-top: 1px solid @quiet-border; }
+}
+
+// Unread marker: a short accent bar on the row's left edge (the row's td.subject must be positioned).
+.quiet-unread-bar(@color) {
+    &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        border-radius: 2px;
+        background-color: @color;
+    }
+}
+
+// Elastic marks the keyboard-focused row with an accent left border, which reads as the unread bar. Quiet: a neutral
+// grey border, and none on a selected row (the selection already shows where you are).
+html:not(.touch) body.task-mail .messagelist.focus tbody tr.focused {
+    > td:first-child, > td.selection + td { border-left-color: @quiet-text-2; }
+    &.selected > td:first-child, &.selected > td.selection + td { border-left-color: transparent; }
+}
+html.dark-mode:not(.touch) body.task-mail .messagelist.focus tbody tr.focused:not(.selected) {
+    > td:first-child, > td.selection + td { border-left-color: @quiet-text-2-dark; }
+}
+
+// Phone: Elastic's unread marker is a warning-yellow glyph and read rows get a black one, and hovering (a tap on touch)
+// swaps the time for the size. Quiet: unread gets the same left bar and accent subject as desktop, no glyphs on
+// plain rows, time stays put.
+@media screen and (max-width: @screen-width-small) {
+    body.task-mail .messagelist {
+        td.subject span.msgicon.status:not(.unread):not(.replied):not(.forwarded):not(.unreadchildren):before { content: none; }
+        // Sender and subject share one left edge (Elastic indents the sender for a status glyph column that
+        // Quiet does not draw); sender on top at 14px, subject below at 13px, as on desktop.
+        td.subject { padding-left: 14px; }
+        td.subject span.fromto { padding-left: 0; font-size: 14px; }
+        td.subject span.subject { font-size: 13px; }
+        tr.message td.subject span.msgicon.status.unread:before { content: none; }
+        tr.message.unread td.subject {
+            position: relative;
+            .quiet-unread-bar(@quiet-accent);
+            span.subject, span.subject a { color: @quiet-accent-text; font-weight: 600; }
+        }
+        &:not(.sort-size) tr:hover {
+            span.date { display: block; }
+            span.size { display: none; }
+        }
+    }
+}
+html.dark-mode {
+    @media screen and (max-width: @screen-width-small) {
+        body.task-mail .messagelist tr.message.unread td.subject {
+            &:before { background-color: @quiet-accent-text-dark; }
+            span.subject, span.subject a { color: @quiet-accent-text-dark; }
+        }
+    }
+}
+
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-mail.action-none {
+        // Elastic's top toolbar (and its overflow popup) is gone on desktop; Task 8 moves the
+        // reading-pane actions into the pane. The markup stays so small screens keep it.
+        #layout > #layout-content > .header { display: none; }
+
+        // List and reading pane read as one card: the pane closes it on the right with the same inset and radius.
+        #layout-content {
+            margin: 8px 8px 8px 0;
+            border-radius: 0 @quiet-radius-pane @quiet-radius-pane 0;
+            overflow: clip;
+        }
+
+        #layout-list {
+            flex: 0 0 360px;
+            width: 360px;
+            min-width: 360px;
+            max-width: 360px;
+            margin: 8px 0;
+            border-radius: @quiet-radius-pane 0 0 @quiet-radius-pane;
+            border-right: 1px solid @quiet-border;
+            overflow: hidden;
+
+            // Elastic's list header is replaced by #quiet-list-header (title is mirrored by quiet.js).
+            & > .header { display: none !important; }
+        }
+
+        #quiet-list-header {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 12px 4px;
+
+            .quiet-folder-title,
+            .quiet-refresh,
+            .quiet-list-options { display: block; }
+
+            .searchbar {
+                height: 32px;
+                min-height: 32px;
+                line-height: 32px;
+                border: 0;
+                border-radius: @quiet-radius;
+                background-color: @quiet-input-bg;
+                color: @quiet-text-2;
+
+                form:before { margin-left: .6rem; height: 32px; color: @quiet-text-2; }
+                input { color: @quiet-text; padding: 0 .5rem; height: 32px; }
+                a { color: @quiet-text-2; &:before { height: 32px; width: 1.8rem; } }
+                &.active, &.open { background-color: @quiet-input-bg; }
+            }
+
+            .quiet-list-titlerow {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 4px 4px;
+                justify-content: space-between;
+            }
+
+            .quiet-folder-title {
+                flex: 1;
+                min-width: 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: @quiet-text;
+                .overflow-ellipsis();
+            }
+
+            .quiet-list-controls {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+
+                label.voice { position: absolute; }
+            }
+
+            select.quiet-filter {
+                width: auto;
+                max-width: 130px;
+                height: 30px;
+                padding: 0 1.4rem 0 .5rem;
+                border: 0;
+                background-color: transparent;
+                color: @quiet-text;
+                font: inherit;
+                border-radius: @quiet-radius;
+                cursor: pointer;
+                &:hover { background-color: @quiet-hover; }
+            }
+
+            .quiet-refresh,
+            .quiet-list-options {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 0;
+                border-radius: @quiet-radius;
+                background-color: transparent;
+                color: @quiet-text-2;
+                text-align: center;
+                &:hover { background-color: @quiet-hover; }
+
+                .inner { display: none; }
+                &:before {
+                    content: "" !important;
+                    display: block;
+                    width: 18px;
+                    height: 18px;
+                    margin: 6px;
+                    background-color: currentColor;
+                    font-family: inherit;
+                }
+            }
+            .quiet-refresh:before {
+                -webkit-mask: @quiet-icon-refresh center / contain no-repeat;
+                mask: @quiet-icon-refresh center / contain no-repeat;
+            }
+            .quiet-list-options:before {
+                -webkit-mask: @quiet-icon-dots center / contain no-repeat;
+                mask: @quiet-icon-dots center / contain no-repeat;
+            }
+        }
+
+        // ---- rows ----
+        #messagelist-content { padding: 0 6px; }
+
+        .messagelist {
+            border-collapse: separate;
+            border-spacing: 0;
+
+            tr.message td {
+                border-bottom: 1px solid @quiet-row-line;
+                color: @quiet-text;
+                background-color: transparent;
+            }
+            tr.message td:first-child { border-radius: @quiet-radius 0 0 @quiet-radius; }
+            tr.message td:last-child  { border-radius: 0 @quiet-radius @quiet-radius 0; }
+
+            td.subject {
+                position: relative;
+                padding: 10px 4px 10px 26px;
+
+                span.fromto {
+                    padding-left: 0;
+                    font-size: 1rem;
+                    color: @quiet-text;
+                }
+                span.date, span.size {
+                    font-size: 12px;
+                    color: @quiet-text-2;
+                    line-height: 2em;
+                }
+                // Subject is a step below the sender: smaller and secondary grey (unread turns it bold accent).
+                span.subject {
+                    font-size: 13px;
+                    line-height: 1.5em;
+                    &, a { color: @quiet-text-2; }
+                }
+            }
+            td.flags { padding-right: 8px; }
+            // Elastic's touch layout (<= 1024px) overlays the flags column on the top right, over the date
+            // and the hover actions. Move it down to the subject line, where the subject already leaves room.
+            html.touch & td.flags {
+                top: auto;
+                bottom: 10px;
+                border: 0;
+                background-color: transparent !important;
+                span.flag { display: none; }
+            }
+            // Plain read/unread status marker: no icon (unread has the dot; replied/forwarded keep theirs).
+            td.subject span.msgicon.status:not(.unread):not(.replied):not(.forwarded):not(.unreadchildren) {
+                width: 0;
+                overflow: hidden;
+                &:before { content: none; }
+            }
+
+            tr.message:hover td { background-color: @quiet-hover; }
+            tr.message.selected td { background-color: @quiet-sel; color: @quiet-text; }
+
+            // ---- hover quick actions: replace the date/size at the right of the sender line ----
+            // Hidden with opacity (not display) so the focused row's buttons stay reachable with Tab.
+            .quiet-row-actions {
+                display: flex;
+                position: absolute;
+                top: 6px;
+                right: 0;
+                gap: 2px;
+                line-height: 1;
+                opacity: 0;
+                pointer-events: none;
+
+                button {
+                    display: block;
+                    width: 32px;
+                    height: 32px;
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    border-radius: @quiet-radius;
+                    background-color: transparent;
+                    color: @quiet-row-btn;
+                    cursor: pointer;
+
+                    &:before {
+                        content: "";
+                        display: block;
+                        width: 18px;
+                        height: 18px;
+                        margin: 7px;
+                        background-color: currentColor;
+                    }
+                    &:hover { background-color: @quiet-row-btn-hover; }
+                    &:focus-visible { outline: 2px solid @quiet-accent; outline-offset: -2px; }
+                }
+                .quiet-ra-delete {
+                    background-color: @quiet-danger-bg;
+                    color: @quiet-danger-text;
+                    &:hover { background-color: darken(@quiet-danger-bg, 4%); }
+                }
+                .quiet-ra-delete:before  { -webkit-mask: @quiet-icon-delete center / contain no-repeat; mask: @quiet-icon-delete center / contain no-repeat; }
+                .quiet-ra-archive:before { -webkit-mask: @quiet-icon-archive center / contain no-repeat; mask: @quiet-icon-archive center / contain no-repeat; }
+                .quiet-ra-flag:before    { -webkit-mask: @quiet-icon-flag center / contain no-repeat; mask: @quiet-icon-flag center / contain no-repeat; }
+                .quiet-ra-read:before    { -webkit-mask: @quiet-icon-mail-open center / contain no-repeat; mask: @quiet-icon-mail-open center / contain no-repeat; }
+            }
+            // Read shows what the click gives (open envelope = mark read); Flag is filled while flagged.
+            tr:not(.unread) .quiet-ra-read:before { -webkit-mask-image: @quiet-icon-mail; mask-image: @quiet-icon-mail; }
+            tr.flagged .quiet-ra-flag:before { -webkit-mask-image: @quiet-icon-flag-on; mask-image: @quiet-icon-flag-on; }
+
+            tr.message:hover .quiet-row-actions,
+            .quiet-row-actions:focus-within { opacity: 1; pointer-events: auto; }
+            tr.message:hover,
+            tr.message:has(.quiet-row-actions:focus-within) {
+                td.subject {
+                    span.date, span.size { display: none; }
+                    span.fromto { padding-right: (@quiet-row-actions-w + 4px); }
+                }
+            }
+            // Elastic's hover-only flag outline in the flags column duplicates the Flag action.
+            tr.message:hover td.flags span.unflagged:before { content: none; }
+            // Selected rows: sender and time use the primary text colour, the subject stays grey (accent fails contrast on the tint).
+            tr.message.selected td.subject {
+                span.fromto, span.date, span.size { color: @quiet-text; }
+                span.subject, span.subject a { color: @quiet-text-2; }
+            }
+
+            // Unread (Outlook-style): accent bar on the row's left edge, bold sender, bold accent subject and time.
+            tr.unread td.subject {
+                .quiet-unread-bar(@quiet-accent);
+                span.fromto { font-weight: 600; }
+                span.subject, span.subject a { font-weight: 600; color: @quiet-accent-text; }
+                span.date { font-weight: 600; color: @quiet-accent-text; }
+                // Elastic's own unread marker is replaced by the bar (the span stays clickable).
+                span.msgicon.status.unread { width: 0; overflow: hidden; &:before { content: none; } }
+            }
+        }
+        // ---- multi-select (> 1 message selected): bar next to the title, empty state in the reading pane ----
+        &.quiet-multi {
+            #quiet-list-header {
+                .quiet-list-controls { display: none; }
+                .quiet-folder-title { flex: 0 1 auto; }
+                #quiet-multibar {
+                    display: flex;
+                    flex: 1;
+                    align-items: center;
+                    gap: 6px;
+                    min-width: 0;
+                    margin-left: 8px;
+                }
+                .quiet-multi-count { margin-right: auto; font-size: 12px; color: @quiet-text-2; white-space: nowrap; }
+                .quiet-multi-tools { display: flex; gap: 2px; }
+                .quiet-mb {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    height: 26px;
+                    min-width: 26px;
+                    margin: 0;
+                    padding: 0;
+                    border: 1px solid @quiet-border-control;
+                    border-radius: @quiet-radius;
+                    background-color: transparent;
+                    color: @quiet-row-btn;
+                    font: inherit;
+                    font-size: 12px;
+                    cursor: pointer;
+                    &[hidden] { display: none; }
+                    &:hover { background-color: @quiet-row-btn-hover; }
+                    &:focus-visible { outline: 2px solid @quiet-accent; outline-offset: 1px; }
+                    &:before {
+                        content: "";
+                        display: block;
+                        width: 14px;
+                        height: 14px;
+                        background-color: currentColor;
+                    }
+                }
+                .quiet-mb-delete {
+                    padding: 0 8px;
+                    border-color: @quiet-danger-border;
+                    background-color: @quiet-danger-bg;
+                    color: @quiet-danger-text;
+                    &:hover { background-color: darken(@quiet-danger-bg, 4%); }
+                }
+                .quiet-mb-clear { border: 0; font-size: 16px; color: @quiet-text-2; &:before { content: none; } }
+                .quiet-mb-delete:before  { -webkit-mask: @quiet-icon-delete center / contain no-repeat; mask: @quiet-icon-delete center / contain no-repeat; }
+                .quiet-mb-archive:before { -webkit-mask: @quiet-icon-archive center / contain no-repeat; mask: @quiet-icon-archive center / contain no-repeat; }
+                .quiet-mb-flag:before    { -webkit-mask: @quiet-icon-flag center / contain no-repeat; mask: @quiet-icon-flag center / contain no-repeat; }
+                .quiet-mb-flag.on:before { -webkit-mask-image: @quiet-icon-flag-on; mask-image: @quiet-icon-flag-on; }
+                .quiet-mb-read:before    { -webkit-mask: @quiet-icon-mail-open center / contain no-repeat; mask: @quiet-icon-mail-open center / contain no-repeat; }
+                .quiet-mb-move:before    { -webkit-mask: @quiet-icon-move center / contain no-repeat; mask: @quiet-icon-move center / contain no-repeat; }
+            }
+            .messagelist {
+                tr.message.selected td { background-color: @quiet-sel-multi; }
+                .quiet-row-actions { display: none !important; }
+            }
+            #layout-content {
+                position: relative;
+                .iframe-wrapper { visibility: hidden; }
+                .quiet-empty {
+                    display: flex;
+                    position: absolute;
+                    inset: 0;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    color: @quiet-text-2;
+                    svg { color: @quiet-border-control; }
+                    .quiet-empty-title { font-size: 16px; font-weight: 600; color: @quiet-text; }
+                    .quiet-empty-hint { font-size: 13px; }
+                }
+            }
+        }
+    }
+}
+
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        body.task-mail.action-none {
+            #layout-list { border-right-color: @quiet-border-dark; }
+            #quiet-list-header {
+                .searchbar { background-color: @quiet-input-bg-dark; color: @quiet-text-2-dark;
+                    form:before, a { color: @quiet-text-2-dark; }
+                    input { color: @quiet-text-dark; } }
+                .quiet-folder-title { color: @quiet-text-dark; }
+                select.quiet-filter { color: @quiet-text-dark; &:hover { background-color: @quiet-hover-dark; } }
+                .quiet-refresh, .quiet-list-options { color: @quiet-text-2-dark; &:hover { background-color: @quiet-hover-dark; } }
+            }
+            .messagelist {
+                tr.message td { border-bottom-color: @quiet-row-line-dark; color: @quiet-text-dark; }
+                td.subject {
+                    span.fromto { color: @quiet-text-dark; }
+                    span.subject, span.subject a { color: @quiet-text-2-dark; }
+                    span.date, span.size { color: @quiet-text-2-dark; }
+                }
+                tr.message:hover td { background-color: @quiet-hover-dark; }
+                .quiet-row-actions {
+                    button { color: @quiet-text-2-dark; &:hover { background-color: @quiet-row-btn-hover-dark; } }
+                    .quiet-ra-delete {
+                        background-color: @quiet-danger-bg-dark;
+                        color: @quiet-danger-text-dark;
+                        &:hover { background-color: lighten(@quiet-danger-bg-dark, 5%); }
+                    }
+                    button:focus-visible { outline-color: @quiet-accent-text-dark; }
+                }
+                tr.message.selected td { background-color: @quiet-sel-dark; color: @quiet-text-dark; }
+                tr.message.selected td.subject {
+                    span.fromto, span.date, span.size { color: @quiet-text-dark; }
+                    span.subject, span.subject a { color: @quiet-text-2-dark; }
+                }
+                tr.unread td.subject {
+                    &:before { background-color: @quiet-accent-text-dark; }
+                    span.subject, span.subject a, span.date { color: @quiet-accent-text-dark; }
+                }
+            }
+
+            &.quiet-multi {
+                #quiet-list-header {
+                    .quiet-multi-count, .quiet-mb-clear { color: @quiet-text-2-dark; }
+                    .quiet-mb { border-color: @quiet-border-control-dark; color: @quiet-text-2-dark; &:hover { background-color: @quiet-row-btn-hover-dark; } &:focus-visible { outline-color: @quiet-accent-text-dark; } }
+                    .quiet-mb-clear { border: 0; }
+                    .quiet-mb-delete {
+                        border-color: @quiet-danger-border-dark;
+                        background-color: @quiet-danger-bg-dark;
+                        color: @quiet-danger-text-dark;
+                        &:hover { background-color: lighten(@quiet-danger-bg-dark, 5%); }
+                    }
+                }
+                .messagelist tr.message.selected td { background-color: @quiet-sel-multi-dark; }
+                // grey subject is under 4.5:1 on the stronger multi-select tint
+                .messagelist tr.message.selected td.subject { span.subject, span.subject a { color: @quiet-text-dark; } }
+                #layout-content .quiet-empty {
+                    color: @quiet-text-2-dark;
+                    svg { color: @quiet-border-control-dark; }
+                    .quiet-empty-title { color: @quiet-text-dark; }
+                }
+            }
+        }
+    }
+    .quiet-menu-label { color: @quiet-text-2-dark; &:empty { border-top-color: @quiet-border-dark; } }
+}
+
+// ---- list footer pager: ghost icon buttons like the header's refresh/options, quiet page field ----
+@quiet-flag: #c4314b;
+@quiet-flag-dark: #f1707b;
+
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-mail #layout-list > .pagenav {
+        gap: 2px;
+        height: 44px;
+        padding: 0 8px !important;
+        border-top: 1px solid @quiet-row-line;
+        background-color: @quiet-bg-pane;
+
+        a {
+            flex: 0 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            min-width: 32px !important;
+            height: 32px;
+            border-radius: @quiet-radius;
+            color: @quiet-text-2;
+
+            &:before {
+                content: "" !important;
+                display: block;
+                width: 16px;
+                height: 16px;
+                background-color: currentColor;
+                line-height: 1;
+            }
+            &.firstpage:before { -webkit-mask: @qi-chevs-left center / contain no-repeat; mask: @qi-chevs-left center / contain no-repeat; }
+            &.prevpage:before  { -webkit-mask: @qi-chev-left center / contain no-repeat; mask: @qi-chev-left center / contain no-repeat; }
+            &.nextpage:before  { -webkit-mask: @qi-chev-right center / contain no-repeat; mask: @qi-chev-right center / contain no-repeat; }
+            &.lastpage:before  { -webkit-mask: @qi-chevs-right center / contain no-repeat; mask: @qi-chevs-right center / contain no-repeat; }
+            &:not(.disabled):hover { background-color: @quiet-row-btn-hover; color: @quiet-text; }
+            &.disabled { opacity: .35; }
+        }
+
+        .pagenav-text {
+            flex: 1 1 auto;
+            font-size: 12px;
+            color: @quiet-text-2;
+            text-align: center;
+        }
+
+        input {
+            width: 40px;
+            height: 28px;
+            max-height: none;
+            margin: 0 4px;
+            padding: 0;
+            border: 1px solid @quiet-border-control;
+            border-radius: @quiet-radius;
+            background-color: transparent;
+            color: @quiet-text;
+            font-size: 12px;
+            &:disabled { background-color: transparent; }
+        }
+    }
+
+    // Filter: one stroke chevron instead of Bootstrap's double arrow.
+    body.task-mail #quiet-list-header select.quiet-filter {
+        padding-right: 26px;
+        font-size: 13px;
+        background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23616161' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") right 8px center / 12px no-repeat;
+        &:hover { background-color: @quiet-hover; }
+        &:focus { box-shadow: none; outline: 2px solid @quiet-accent; outline-offset: -2px; }
+    }
+}
+
+// Flagged rows: stroke flag (filled) in the flag red, at every width.
+body.task-mail .messagelist span.flagged:before {
+    content: "" !important;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    background-color: @quiet-flag;
+    -webkit-mask: @quiet-icon-flag-on center / contain no-repeat;
+    mask: @quiet-icon-flag-on center / contain no-repeat;
+}
+// Elastic paints the whole flagged row red; the flag icon alone carries the state.
+// Unread flagged rows keep the unread accent on subject and time.
+body.task-mail .messagelist tr.flagged:not(.selected) td.subject span.fromto { color: @quiet-text; }
+body.task-mail .messagelist tr.flagged:not(.selected):not(.unread) td.subject {
+    span.date { color: @quiet-text-2; }
+    span.subject a { color: @quiet-text-2; }
+}
+
+html.dark-mode {
+    body.task-mail .messagelist span.flagged:before { background-color: @quiet-flag-dark; }
+    body.task-mail .messagelist tr.flagged:not(.selected) td.subject span.fromto { color: @quiet-text-dark; }
+    body.task-mail .messagelist tr.flagged:not(.selected):not(.unread) td.subject {
+        span.date, span.subject a { color: @quiet-text-2-dark; }
+    }
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        body.task-mail #layout-list > .pagenav {
+            border-top-color: @quiet-row-line-dark;
+            background-color: @quiet-bg-pane-dark;
+            a { color: @quiet-text-2-dark; &:not(.disabled):hover { background-color: @quiet-row-btn-hover-dark; color: @quiet-text-dark; } }
+            .pagenav-text { color: @quiet-text-2-dark; }
+            input { border-color: @quiet-border-control-dark; color: @quiet-text-dark; }
+        }
+        body.task-mail #quiet-list-header select.quiet-filter {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23adadad' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            &:hover { background-color: @quiet-hover-dark; }
+            &:focus { outline-color: @quiet-accent-text-dark; }
+        }
+    }
+}
+
+// Touch layouts hide the flags-column flag (it would sit on the time); the flag goes before the subject instead.
+html.touch,
+html.layout-phone {
+    body.task-mail .messagelist tr.flagged td.subject span.subject a:before {
+        content: "";
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        margin-right: 5px;
+        vertical-align: -1px;
+        background-color: @quiet-flag;
+        -webkit-mask: @quiet-icon-flag-on center / contain no-repeat;
+        mask: @quiet-icon-flag-on center / contain no-repeat;
+    }
+}
+html.dark-mode {
+    &.touch, &.layout-phone {
+        body.task-mail .messagelist tr.flagged td.subject span.subject a:before { background-color: @quiet-flag-dark; }
+    }
+    // Elastic's dark theme also paints the flagged row's paperclip red.
+    body.task-mail .messagelist tr.flagged span.attachment span { color: var(--quiet-icon-color); }
+}
+// Phone: unread rows keep a grey time, flagged or not.
+@media screen and (max-width: @screen-width-small) {
+    body.task-mail .messagelist tr.flagged.unread:not(.selected) td.subject span.date { color: @quiet-text-2; }
+    html.dark-mode & body.task-mail .messagelist tr.flagged.unread:not(.selected) td.subject span.date { color: @quiet-text-2-dark; }
+}
+
+// Contacts and Settings list search: the same rounded filled field as the mail list's.
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-addressbook #layout-list,
+    body.task-settings #layout-list {
+        .searchbar {
+            height: 32px;
+            min-height: 32px;
+            margin: 8px 12px 4px;
+            line-height: 32px;
+            border: 0;
+            border-radius: @quiet-radius;
+            background-color: @quiet-input-bg;
+            color: @quiet-text-2;
+
+            form:before { margin-left: .6rem; height: 32px; color: @quiet-text-2; }
+            input { color: @quiet-text; padding: 0 .5rem; height: 32px; }
+            a { color: @quiet-text-2; &:before { height: 32px; width: 1.8rem; } }
+            &.active, &.open { background-color: @quiet-input-bg; }
+        }
+    }
+    html.dark-mode {
+        body.task-addressbook #layout-list,
+        body.task-settings #layout-list {
+            .searchbar {
+                background-color: @quiet-input-bg-dark;
+                color: @quiet-text-2-dark;
+                form:before, a { color: @quiet-text-2-dark; }
+                input { color: @quiet-text-dark; }
+            }
+        }
+    }
+}

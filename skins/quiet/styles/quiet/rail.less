@@ -1,0 +1,238 @@
+// App rail (~52px) and account popover. Phone widths keep Elastic's off-canvas menu.
+
+@quiet-rail-width: 52px;
+
+// Icons: stroke SVGs from the mockups, used as CSS masks so they follow currentColor.
+@quiet-icon-mail:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3 7l9 6 9-6'/%3E%3C/svg%3E");
+@quiet-icon-contacts: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5'/%3E%3Ccircle cx='17' cy='9' r='2.5'/%3E%3Cpath d='M17 14c2.2 0 3.9 1.5 4.5 4'/%3E%3C/svg%3E");
+@quiet-icon-settings: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1'/%3E%3C/svg%3E");
+
+.quiet-mask(@img) {
+    content: "" !important;
+    display: block;
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 auto !important;
+    background-color: currentColor;
+    -webkit-mask: @img center / contain no-repeat;
+    mask: @img center / contain no-repeat;
+}
+
+// The account button and popover are desktop-only; on phones the items show inline in the off-canvas menu.
+// (.btn too: on touch devices Elastic adds it to every button, and the global .btn rules would win.)
+.quiet-account,
+.quiet-account.btn { display: none; }
+
+
+@media screen and (max-width: @screen-width-xs) {
+    .quiet-popover[hidden] { display: block !important; }
+}
+
+@media screen and (min-width: (@screen-width-xs + 1px)) {
+    .quiet-popover[hidden] { display: none; }
+
+    #layout-menu {
+        width: @quiet-rail-width !important;
+        background-color: @quiet-bg-rail;
+        border-right: 0;
+
+        .popover-header { display: none; }
+    }
+
+    #taskmenu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        padding-top: 12px;
+        gap: 4px;
+
+        // "New mail" lives in the folder pane on desktop.
+        .action-buttons { display: none; }
+
+        > a {
+            width: 40px !important;
+            height: 40px !important;
+            padding: 0 !important;
+            border-radius: @quiet-radius;
+            color: @quiet-text-2;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+
+            &:hover { background: rgba(0, 0, 0, .07); color: @quiet-text; }
+            &.selected,
+            &.selected:hover {
+                background: @quiet-bg-pane;
+                color: @quiet-accent-text;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+            }
+
+            // Labels stay for screen readers only.
+            span.inner {
+                display: block !important;
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
+            }
+
+            &:before { margin: 0 !important; float: none !important; line-height: 1 !important; }
+            &.mail:before     { .quiet-mask(@quiet-icon-mail); }
+            &.contacts:before { .quiet-mask(@quiet-icon-contacts); }
+            &.settings:before { .quiet-mask(@quiet-icon-settings); }
+        }
+
+        .special-buttons {
+            position: static;
+            margin-top: auto;
+            padding-bottom: 12px;
+            background: transparent;
+        }
+    }
+
+    .quiet-account,
+    .quiet-account.btn {
+        display: flex;
+        min-height: 0;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: @quiet-accent;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+
+        &:hover { filter: brightness(1.1); }
+    }
+
+    .quiet-popover {
+        position: fixed;
+        z-index: 10000;
+        min-width: 180px;
+        padding: 4px;
+        background: @quiet-bg-pane;
+        border: 1px solid @quiet-border;
+        border-radius: @quiet-radius-pane;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+
+        a {
+            display: flex !important;
+            align-items: center;
+            width: auto !important;
+            height: 36px !important;
+            padding: 0 12px !important;
+            border-radius: @quiet-radius;
+            color: @quiet-text !important;
+            background: transparent !important;
+            font-size: 14px;
+            text-align: left;
+
+            &:before { display: none !important; }
+            span.inner { display: inline !important; position: static !important; width: auto !important; height: auto !important; clip: auto !important; padding: 0 !important; }
+            &:hover { background: @quiet-bg-app !important; }
+            &.logout { color: @quiet-danger-text !important; }
+        }
+    }
+}
+
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-xs + 1px)) {
+        #layout-menu { background-color: @quiet-bg-rail-dark; }
+
+        #taskmenu > a {
+            color: @quiet-text-2-dark;
+
+            &:hover { background: rgba(255, 255, 255, .08); color: @quiet-text-dark; }
+            &.selected,
+            &.selected:hover {
+                background: @quiet-bg-pane-dark;
+                color: @quiet-accent-text-dark;
+                box-shadow: none;
+            }
+        }
+
+        
+
+        .quiet-account { background: @quiet-accent-dark; }
+
+        .quiet-popover {
+            background: @quiet-bg-pane-dark;
+            border-color: @quiet-border-dark;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+
+            a {
+                color: @quiet-text-dark !important;
+                background: transparent !important;
+                &:hover { background: @quiet-bg-app-dark !important; }
+                &.logout { color: @quiet-danger-text-dark !important; }
+            }
+        }
+    }
+}
+
+// Colour-scheme picker in the account menu (desktop popover and phone off-canvas menu alike).
+.quiet-schemes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 12px 8px;
+    color: @quiet-text-2;
+    font-size: 13px;
+
+    .quiet-swatches { display: flex; gap: 6px; }
+
+    button,
+    button.btn {
+        display: block;
+        width: 20px;
+        height: 20px;
+        min-height: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        &[data-scheme="lake"]   { background: @quiet-swatch-lake; }
+        &[data-scheme="cobalt"] { background: @quiet-swatch-cobalt; }
+        &[data-scheme="teal"]   { background: @quiet-swatch-teal; }
+        &[data-scheme="indigo"] { background: @quiet-swatch-indigo; }
+        &:hover { filter: brightness(1.15); }
+        &:focus-visible { outline: 2px solid @quiet-accent-text; outline-offset: 2px; }
+        &[aria-checked="true"] { box-shadow: 0 0 0 2px @quiet-bg-pane, 0 0 0 4px @quiet-text; }
+    }
+}
+
+// Phone: a row like the off-canvas menu's links (same height, text inset and divider).
+@media screen and (max-width: @screen-width-xs) {
+    .quiet-schemes {
+        min-height: 48px;
+        padding: 0 16px 0 41px;
+        border-bottom: 1px solid @quiet-border;
+        color: @quiet-text;
+        font-size: 1rem;
+
+        .quiet-swatches { gap: 10px; }
+        button, button.btn { width: 24px; height: 24px; }
+    }
+    html.dark-mode .quiet-schemes { border-bottom-color: @quiet-border-dark; color: @quiet-text-dark; }
+}
+
+html.dark-mode .quiet-schemes {
+    color: @quiet-text-2-dark;
+    button:focus-visible { outline-color: @quiet-accent-text-dark; }
+    button[aria-checked="true"] { box-shadow: 0 0 0 2px @quiet-bg-pane-dark, 0 0 0 4px @quiet-text-dark; }
+}
+
+// Username text is only read by quiet.js (account initial, tooltip).
+.quiet-username { display: none; }

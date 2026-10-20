@@ -1,0 +1,26 @@
+From: Bob Builder <bob@example.org>
+To: Klaus <klaus@localhost>
+Subject: Fixture html-basic: weekly summary
+Date: Sun, 18 Oct 2026 08:58:00 +0000
+Message-ID: <html-basic@quiet.test>
+X-Quiet-Fixture: html-basic
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============5758590019618969549=="
+
+--===============5758590019618969549==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Weekly summary: all good.
+
+--===============5758590019618969549==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><h2>Weekly summary</h2><p>All <b>good</b>. See <a href=3D'https:/=
+/example.org'>the report</a>.</p><ul><li>One</li><li>Two</li></ul><blockquote=
+>Quoted text</blockquote></body></html>
+
+--===============5758590019618969549==--

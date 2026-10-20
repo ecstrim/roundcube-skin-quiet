@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Login L1: centered card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#0f6cbd}a:hover{color:#0c3b5e}
+</style>
+</helmet>
+<div style="width: 100%; height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 16px; box-sizing: border-box; font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif; font-size: 14px; background: {{c.bg}}; color: {{c.text}}">
+  <form style="width: 100%; max-width: 380px; box-sizing: border-box; padding: 36px 36px 28px; border-radius: 10px; background: {{c.card}}; border: 1px solid {{c.border}}; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; background: {{c.accent}}; color: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+      <div style="font-size: 18px; font-weight: 600">[Webmail name]</div>
+    </div>
+    <hr style="width: 100%; border: 0; border-top: 1px solid {{c.border}}; margin: 8px 0 0">
+    <div style="font-size: 22px; font-weight: 600; margin-top: 12px">Sign in</div>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: {{c.muted}}">Username
+      <input type="text" value="klaus" style="height: 36px; padding: 0 10px; border: 1px solid {{c.field}}; border-radius: 6px; background: {{c.input}}; color: {{c.text}}; font: inherit; font-size: 14px">
+    </label>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: {{c.muted}}">Password
+      <input type="password" value="hunter22" style="height: 36px; padding: 0 10px; border: 1px solid {{c.field}}; border-radius: 6px; background: {{c.input}}; color: {{c.text}}; font: inherit; font-size: 14px">
+    </label>
+    <button type="button" style="height: 38px; margin-top: 8px; border: 0; border-radius: 6px; background: {{c.button}}; color: #ffffff; font: inherit; font-weight: 600">Sign in</button>
+  </form>
+  <div style="font-size: 12px; color: {{c.muted}}; display: flex; gap: 12px"><a href="#" style="color: {{c.muted}}">Get support</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? true;
+    const c = dark
+      ? { bg: '#1b1b1b', card: '#262626', border: '#333333', text: '#e8e8e8', muted: '#adadad', field: '#4a4a4a', input: '#1f1f1f', accent: '#115ea3', button: '#115ea3' }
+      : { bg: '#f0f0f0', card: '#ffffff', border: '#e0e0e0', text: '#242424', muted: '#616161', field: '#d1d1d1', input: '#ffffff', accent: '#0f6cbd', button: '#0f6cbd' };
+    return { c };
+  }
+}
+</script>
+</body>
+</html>

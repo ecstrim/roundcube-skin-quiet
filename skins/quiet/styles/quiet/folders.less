@@ -1,0 +1,224 @@
+// Folder pane: New mail button, pill-selected folder tree, "···" folder actions, quota.
+// At phone/tablet widths (<= @screen-width-small) the sidebar is Elastic's off-canvas list with its own header.
+
+@quiet-icon-pencil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3C/svg%3E");
+
+.quiet-folder-top { display: none; }
+
+// Quota: a thin bar over "x of y" text, no drive glyph (mail folder pane and Settings > Folders)
+.quiet-quota() {
+    max-width: none;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    color: @quiet-text-2;
+    font-size: 12px;
+
+    &:before { display: none; }
+
+    .bar {
+        order: 1;
+        flex: 0 0 100%;
+        height: 4px;
+        margin: 0 0 6px;
+        border: 0;
+        border-radius: 2px;
+        background-color: @quiet-border;
+    }
+
+    .value { height: 4px; opacity: 1; background-color: @quiet-accent; &.warning { background-color: @color-error; } }
+    .count { order: 2; font-size: 12px; }
+}
+.quiet-quota-dark() {
+    color: @quiet-text-2-dark;
+    .bar { background-color: @quiet-border-dark; }
+    .value { background-color: @quiet-accent-text-dark; &.warning { background-color: @color-error; } }
+}
+body.task-settings #layout-list .footer .quota-widget { .quiet-quota(); text-align: left; }
+html.dark-mode body.task-settings #layout-list .footer .quota-widget { .quiet-quota-dark(); }
+
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    #layout-sidebar:not(.sidebar-right),
+    #quiet-compose-folders {
+        background-color: transparent;
+        border-right: 0;
+        padding: 12px 8px 0 4px;
+
+        .quiet-mobile-header { display: none !important; }
+
+        .quiet-folder-top {
+            display: flex;
+            gap: 6px;
+            margin: 0 4px 14px;
+        }
+
+        // Fixed size: the button no longer stretches with the pane (160px fits "Nuovo messaggio" too).
+        .quiet-newmail {
+            flex: 0 0 auto;
+            min-width: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 36px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: @quiet-radius;
+            background-color: @quiet-accent;
+            color: #fff;
+            font-weight: 500;
+            text-decoration: none;
+
+            &:before {
+                content: "" !important;
+                width: 16px;
+                height: 16px;
+                margin: 0;
+                background-color: currentColor;
+                -webkit-mask: @quiet-icon-pencil center / contain no-repeat;
+                mask: @quiet-icon-pencil center / contain no-repeat;
+            }
+
+            .inner { display: inline; padding: 0; }
+            &:hover { background-color: darken(@quiet-accent, 6%); color: #fff; }
+        }
+
+        .quiet-folder-actions {
+            margin-left: auto;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: @quiet-radius;
+            color: @quiet-text-2;
+            text-align: center;
+            line-height: 36px;
+
+            // Elastic hides the label of icon buttons; draw the dots ourselves.
+            &:before {
+                content: "\00b7\00b7\00b7" !important;
+                background: none !important; -webkit-mask: none !important; mask: none !important;  // text, not a glyph mask
+                font-family: @quiet-font !important;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 36px;
+                letter-spacing: 1px;
+                margin: 0;
+                width: auto;
+                height: auto;
+            }
+
+            .inner { display: none; }
+            &:hover { background-color: @quiet-border; color: @quiet-text; }
+        }
+
+        #folderlist-content { padding: 0 0 8px; }
+
+        .folderlist {
+            li, li > a, li ul { border: 0 !important; }
+
+            li > a {
+                margin: 1px 0;
+                border-radius: @quiet-radius;
+                color: @quiet-text;
+            }
+
+            // Folder icons (drawn in icons.less): an inline 18px stroke icon before the name.
+            li.mailbox > a:before {
+                display: inline-block;
+                float: none;
+                width: 18px;
+                height: 18px !important;
+                margin: 0 10px 0 0;
+                vertical-align: -4px;
+            }
+            li.mailbox.selected > a:before { color: @quiet-accent-text; }
+            li.mailbox > a { padding-left: @listing-treetoggle-width; }
+            // Subfolders sit one toggle width further right per level (Elastic's own indent, which the rule above beat).
+            li.mailbox ul li.mailbox > a { padding-left: (2 * @listing-treetoggle-width); }
+            li.mailbox ul li.mailbox ul li.mailbox > a { padding-left: (3 * @listing-treetoggle-width); }
+            li.mailbox ul li.mailbox ul li.mailbox ul li.mailbox > a { padding-left: (4 * @listing-treetoggle-width); }
+
+            li.mailbox.unread > a { font-weight: 400; padding-right: 2.8em; }
+
+            li.mailbox .unreadcount {
+                background: transparent;
+                color: @quiet-text-2;
+                font-weight: 400;
+                font-size: 13px;
+                padding: 0 12px 0 0;
+            }
+
+            li.mailbox.inbox .unreadcount,
+            li.mailbox.unread > a > .unreadcount { color: @quiet-accent-text; font-weight: 600; }
+
+            li:not(.selected) > a:hover { background-color: fade(@quiet-text, 6%); }
+
+            li.selected > a {
+                background-color: @quiet-bg-pane;
+                color: @quiet-text;
+                font-weight: 600;
+            }
+        }
+
+        .footer {
+            border-top: 0;
+            background: transparent;
+            padding: 0 4px 12px;
+            height: auto !important;
+            min-height: 0 !important;
+            line-height: 1.3 !important;
+            flex-shrink: 0;
+        }
+
+        .quota-widget { .quiet-quota(); }
+    }
+}
+
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        #layout-sidebar:not(.sidebar-right),
+        #quiet-compose-folders {
+            background-color: transparent;
+
+            .quiet-newmail {
+                background-color: @quiet-accent-dark;
+
+                &:hover { background-color: lighten(@quiet-accent-dark, 6%); }
+            }
+
+            .quiet-folder-actions {
+                color: @quiet-text-2-dark;
+                &:hover { background-color: @quiet-border-dark; color: @quiet-text-dark; }
+            }
+
+            .folderlist {
+                li > a { color: @quiet-text-dark; }
+                // Elastic's dark selected-row fill belongs to the pill (the <a>) only, not the <li>.
+                li.selected, li.selected ul { background-color: transparent; }
+                li:not(.selected) > a:hover { background-color: fade(@quiet-text-dark, 8%); }
+                li.selected > a { background-color: @quiet-bg-pane-dark; color: @quiet-text-dark; }
+                li.mailbox.selected > a:before { color: @quiet-accent-text-dark; }
+                li.mailbox .unreadcount { color: @quiet-text-2-dark; background: transparent; }
+                li.mailbox.inbox .unreadcount,
+                li.mailbox.unread > a > .unreadcount { color: @quiet-accent-text-dark; }
+            }
+
+            .quota-widget { .quiet-quota-dark(); }
+        }
+    }
+}
+
+// Phone and tablet: unread counts as plain numbers (accent on unread folders), like the desktop pane, not badges.
+@media screen and (max-width: @screen-width-small) {
+    .folderlist li.mailbox .unreadcount {
+        background: transparent !important;
+        color: @quiet-text-2;
+        font-weight: 400;
+    }
+    .folderlist li.unread > a > .unreadcount,
+    .folderlist li.inbox > a > .unreadcount { color: @quiet-accent-text; font-weight: 600; }
+    html.dark-mode & {
+        .folderlist li .unreadcount { color: @quiet-text-2-dark; }
+        .folderlist li.unread > a > .unreadcount,
+        .folderlist li.inbox > a > .unreadcount { color: @quiet-accent-text-dark; }
+    }
+}

@@ -1,0 +1,27 @@
+Quiet skin for Roundcube Webmail
+================================
+
+This folder (skins/quiet) is licensed under the Creative Commons
+Attribution-ShareAlike 3.0 Unported licence (CC BY-SA 3.0):
+https://creativecommons.org/licenses/by-sa/3.0/
+
+Quiet is an adaptation of Elastic, the default skin of Roundcube Webmail
+(Copyright (c) The Roundcube Dev Team), which is licensed under CC BY-SA 3.0.
+Quiet's templates are modified copies of Elastic's, and the compiled
+styles/*.min.css files contain Elastic's compiled stylesheets, so the
+ShareAlike terms of Elastic's licence apply to this folder as a whole.
+
+Changes: Quiet replaces Elastic's colours, typography, icons and several
+templates (login, mail, message, compose, layout, menu) and adds colour
+schemes and a dark-mode palette. See README.md for details.
+
+Third-party material in this folder, under its own licence:
+
+- IBM Plex Sans (fonts/*.woff2), Copyright 2019 IBM Corp.,
+  SIL Open Font License 1.1: see fonts/OFL.txt
+- Lucide icons (embedded as SVG data in styles/quiet/_glyphs.less and the
+  compiled styles/*.min.css), ISC License: see LICENSE-lucide.txt
+
+Everything outside this folder (dev stack, tests, tooling, docs) is
+dedicated to the public domain under CC0 1.0: see LICENSE in the
+repository root.

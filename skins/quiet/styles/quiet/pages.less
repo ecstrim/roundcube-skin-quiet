@@ -1,0 +1,132 @@
+// Error pages and small Settings fixes.
+
+// Error page: a quiet card in the content pane instead of a full-width red banner; no empty header strip.
+body.task-error {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        #layout-content > .header { display: none; }
+    }
+    #layout-content > .frame-content > .boxerror.ui.alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        max-width: 560px;
+        margin: 64px auto 0;
+        padding: 20px 24px;
+        border: 1px solid @quiet-border;
+        border-left: 3px solid @quiet-danger-text;
+        border-radius: @quiet-radius-pane;
+        background: @quiet-bg-pane;
+        color: @quiet-text;
+
+        > i.icon { margin: 2px 0 0; }
+        > i.icon, > i.icon:before { color: @quiet-danger-text; }
+        .error-title {
+            margin: 0 0 4px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: lowercase;
+            &::first-letter { text-transform: uppercase; }
+        }
+        .error-text { color: @quiet-text-2; }
+    }
+}
+html.dark-mode body.task-error #layout-content > .frame-content > .boxerror.ui.alert {
+    border-color: @quiet-border-dark;
+    border-left-color: @quiet-danger-text-dark;
+    background: @quiet-bg-pane-dark;
+    color: @quiet-text-dark;
+    > i.icon, > i.icon:before { color: @quiet-danger-text-dark; }
+    .error-text { color: @quiet-text-2-dark; }
+}
+
+// Settings: the mailto handler link when the browser can't register it reads as plain secondary text.
+#mailtoprotohandler.disabled {
+    opacity: 1;
+    color: @quiet-text-2;
+    text-decoration: none;
+    cursor: default;
+}
+html.dark-mode #mailtoprotohandler.disabled { color: @quiet-text-2-dark; }
+
+// Contacts and Settings header toolbars: compact ghost buttons with the icon beside the label (Elastic stacks the
+// label under a big glyph), like the action buttons in the mail view.
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-addressbook,
+    body.task-settings {
+        #layout-content > .header .menu.toolbar,
+        #layout-list > .header .menu.toolbar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding-right: 8px;
+
+            li { display: flex; align-items: center; height: auto; border: 0 !important; box-shadow: none; }
+            > .spacer { width: 8px; }
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                float: none;
+                height: 32px;
+                min-width: 0;
+                max-width: none;
+                padding: 0 10px;
+                border-radius: @quiet-radius;
+                color: @quiet-text-2;
+                font-size: 13px;
+                line-height: 32px;
+
+                &:before { width: 18px !important; height: 32px !important; font-size: 16px; }
+                span.inner { font-size: 13px; }
+                &:not(.disabled):hover,
+                &:not(.disabled):focus { background-color: @quiet-hover; color: @quiet-text; }
+                &.disabled { opacity: .45; }
+            }
+            .dropbutton {
+                display: inline-flex;
+                align-items: center;
+                height: 32px;
+                border: 0 !important;
+                &:not(.disabled):hover { background-color: transparent; }
+                a { height: 32px; line-height: 32px; margin: 0; vertical-align: middle; }
+                a.dropdown { padding: 0 4px; &:before { width: 12px !important; } }
+            }
+        }
+    }
+    html.dark-mode {
+        body.task-addressbook,
+        body.task-settings {
+            #layout-content > .header .menu.toolbar a,
+            #layout-list > .header .menu.toolbar a {
+                color: @quiet-text-2-dark;
+                &:not(.disabled):hover,
+                &:not(.disabled):focus { background-color: @quiet-hover-dark; color: @quiet-text-dark; }
+            }
+        }
+    }
+}
+
+// Settings forms: one label column width on every page (Elastic sizes it per table, so it jumps between sections).
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    .formcontent table.propform > tbody > tr > td.title { width: 40%; }
+}
+
+// Error page: the Back link quiet.js adds under the message.
+.boxerror .quiet-error-back { margin-top: 12px; }
+
+// Identity signature and response text (Settings): the editor bar takes the compose bar colours, and the text box
+// stays a white mail-content box in dark mode, as in compose.
+body.task-settings .html-editor {
+    .editor-toolbar { background-color: @quiet-bar; border-color: @quiet-border-control; color: @quiet-bar-text; }
+    > textarea.form-control {
+        background-color: @quiet-mail-bg !important;
+        color: @quiet-mail-text !important;
+    }
+    div.tox .tox-edit-area { background: @quiet-mail-bg; }
+}
+html.dark-mode body.task-settings .html-editor .editor-toolbar {
+    background-color: @quiet-bar-dark;
+    border-color: @quiet-border-control-dark;
+    color: @quiet-bar-text-dark;
+}

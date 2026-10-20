@@ -1,0 +1,13 @@
+From: Mailing List <announce@lists.example.org>
+To: Klaus <klaus@localhost>
+Subject: Fixture list-post: monthly announcements
+Date: Sun, 18 Oct 2026 08:54:00 +0000
+Message-ID: <list-post@quiet.test>
+X-Quiet-Fixture: list-post
+List-Post: <mailto:announce@lists.example.org>
+List-Id: Announcements <announce.lists.example.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Monthly announcements for list members.

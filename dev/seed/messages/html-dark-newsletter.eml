@@ -1,0 +1,28 @@
+From: Digest <news@example.org>
+To: Klaus <klaus@localhost>
+Subject: Fixture html-dark-newsletter: Autumn digest
+Date: Sun, 18 Oct 2026 08:57:00 +0000
+Message-ID: <html-dark-newsletter@quiet.test>
+X-Quiet-Fixture: html-dark-newsletter
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============2349231136364516896=="
+
+--===============2349231136364516896==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Autumn digest
+
+--===============2349231136364516896==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body bgcolor=3D'#111111'><table width=3D'100%' bgcolor=3D'#1a1a2e' cel=
+lpadding=3D'16'><tr><td style=3D'background:#1a1a2e;color:#ffffff'><h1 style=
+=3D'color:#ffffff'>Autumn digest</h1><p style=3D'color:#ffffff'>White text on=
+ a dark table background.</p><a href=3D'https://example.org' style=3D'color:#=
+9ecbff'>Read more</a></td></tr></table></body></html>
+
+--===============2349231136364516896==--

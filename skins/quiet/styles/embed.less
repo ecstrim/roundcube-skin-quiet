@@ -1,0 +1,14 @@
+// Quiet embed styles: Elastic's, with mail/editor content forced light even in dark mode.
+@import "../../elastic/styles/embed";
+@import "_variables";
+
+html.dark-mode .mce-content-body {
+    background-color: @quiet-mail-bg;
+    color: @quiet-mail-text;
+}
+
+// Light mode too: an explicit white page with dark text, not just whatever the iframe canvas happens to be.
+.mce-content-body {
+    background-color: @quiet-mail-bg;
+    color: @quiet-mail-text;
+}

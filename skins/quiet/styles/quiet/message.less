@@ -1,0 +1,524 @@
+// Open message (mockup ReadR6): reading pane (preview iframe) and full view (_action=show).
+// Layout works at any width, because inside the iframe the viewport is the pane, not the window.
+// The action rows are hidden by message.js (html.quiet-narrow) when the *window* is phone-sized.
+
+@quiet-under-text:      #424242;
+@quiet-under-text-dark: #c8c8c8;
+@quiet-avatar-bg:       #c7e0f4;
+@quiet-avatar-bg-dark:  #2b4a66;
+@quiet-avatar-text:     #0c3b5e;
+@quiet-avatar-text-dark: #cfe4fa;
+
+@quiet-icon-reply:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M9 15L4 10l5-5'/%3E%3Cpath d='M4 10h11a5 5 0 015 5v4'/%3E%3C/svg%3E");
+@quiet-icon-reply-all: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M12 15l-5-5 5-5'/%3E%3Cpath d='M7 15l-5-5 5-5'/%3E%3Cpath d='M7 10h9a5 5 0 015 5v4'/%3E%3C/svg%3E");
+@quiet-icon-forward:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M15 15l5-5-5-5'/%3E%3Cpath d='M20 10H9a5 5 0 00-5 5v4'/%3E%3C/svg%3E");
+
+@quiet-icon-back: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E");
+@quiet-icon-up:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M6 15l6-6 6 6'/%3E%3C/svg%3E");
+@quiet-icon-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+.quiet-msg-pane() {
+    // 16x16 icon drawn in the text colour (mask), used by .quiet-act::before
+    a.quiet-act::before {
+        content: "";
+        flex: none;
+        width: 16px;
+        height: 16px;
+        background-color: currentColor;
+        -webkit-mask: var(--quiet-icon) center / contain no-repeat;
+        mask: var(--quiet-icon) center / contain no-repeat;
+    }
+}
+
+body.task-mail.action-preview,
+body.task-mail.action-show {
+    background-color: @quiet-bg-pane-alt;
+
+    #layout-content {
+        background-color: @quiet-bg-pane-alt;
+    }
+
+    .frame-content {
+        padding: 20px 28px;
+        font-size: 14px;
+        color: @quiet-text;
+    }
+
+    #message-header {
+        margin-bottom: 0;
+    }
+
+    // ---- Full view only: Back and Previous/Next (Elastic's content toolbar is hidden on desktop) ----
+    #quiet-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        a.quiet-act.back { height: 28px; padding: 0 8px 0 4px; border-color: transparent; background: transparent; }
+        .quiet-nav-pager { display: flex; gap: 4px; }
+    }
+
+    // Reply to list only exists for messages with a List-Post header; Roundcube disables it otherwise.
+    .popover li:has(> a.reply.list.disabled) { display: none; }
+
+    // ---- 1. Subject + Flag ----
+    .quiet-subject-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+
+        h2.subject {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+            overflow-wrap: anywhere;
+            color: @quiet-text;
+        }
+    }
+
+    // ---- 2. Sender line ----
+    #message-header .quiet-sender {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-top: 16px;
+
+        .quiet-avatar {
+            flex: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            background: @quiet-avatar-bg;
+            color: @quiet-avatar-text;
+        }
+
+        .header-content {
+            flex: 1 1 260px;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .quiet-from {
+            overflow-wrap: anywhere;
+
+            a.rcmContactAddress {
+                font-weight: 500;
+                color: @quiet-text;
+                text-decoration: none;
+            }
+            .quiet-addr {
+                margin-left: 4px;
+                color: @quiet-text-2;
+            }
+            a.rcmaddcontact { display: none; }
+        }
+
+        // One flat row: To, date, then the header links (the wrapper is dissolved). Every item after the first
+        // leads with the same "·" separator, baseline-aligned; message.js marks the item that starts a wrapped
+        // line (.quiet-linestart) so no separator dangles at a line end or start.
+        .quiet-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            row-gap: 2px;
+            font-size: 12px;
+            line-height: 18px;
+            color: @quiet-text-2;
+
+            .quiet-to { overflow-wrap: anywhere; }
+            a { color: @quiet-text-2; text-decoration: none; }
+
+            .quiet-date:before,
+            .header-links a:before {
+                content: "\00b7";
+                background: none !important; -webkit-mask: none !important; mask: none !important;  // text, not a glyph mask
+                display: inline-block;
+                float: none;
+                width: auto;
+                height: auto;
+                margin: 0 6px;
+                font-family: @quiet-font;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 18px;
+                color: @quiet-text-2;
+                text-decoration: none;
+            }
+            .quiet-linestart:before { display: none !important; }
+        }
+
+        // Elastic shows the one-line summary by default; Quiet's own line replaces it.
+        .header-summary { display: none; }
+
+        .header-headers {
+            margin-top: 8px;
+            font-size: 13px;
+            .header-title { color: @quiet-text-2; font-weight: normal; }
+        }
+
+        .header-links {
+            display: contents;
+
+            a {
+                display: inline;
+                margin: 0;
+                padding: 0;
+                font-size: 12px;
+                line-height: 18px;
+                color: @quiet-accent-text;
+                text-decoration: none;
+                &:hover { text-decoration: underline; }
+            }
+        }
+    }
+
+    #quiet-sender-actions {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+
+        a.quiet-act.delete { margin-left: 18px; }
+    }
+
+    // ---- shared button look ----
+    a.quiet-act {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 12px;
+        border: 1px solid @quiet-border-control;
+        border-radius: @quiet-radius;
+        background: @quiet-bg-inset;
+        color: @quiet-text;
+        font-size: 14px;
+        line-height: 1;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover { background: @quiet-hover; color: @quiet-text; }
+        &:focus-visible { outline: 2px solid @quiet-accent-text; outline-offset: 1px; }
+        &.disabled { opacity: .5; pointer-events: none; }
+
+        &.reply     { --quiet-icon: @quiet-icon-reply; }
+        &.reply-all { --quiet-icon: @quiet-icon-reply-all; }
+        &.forward   { --quiet-icon: @quiet-icon-forward; }
+        &.delete    { --quiet-icon: @quiet-icon-delete; }
+        &.flag      { --quiet-icon: @quiet-icon-flag; }
+        &.back      { --quiet-icon: @quiet-icon-back; }
+        &.prev      { --quiet-icon: @quiet-icon-up; }
+        &.next      { --quiet-icon: @quiet-icon-down; }
+
+        &.danger {
+            background: @quiet-danger-bg;
+            border-color: @quiet-danger-border;
+            color: @quiet-danger-text;
+            &:hover { background: darken(@quiet-danger-bg, 3%); color: @quiet-danger-text; }
+        }
+
+        // Icon-only: the label stays for assistive tech, clipped away visually.
+        &.quiet-icononly {
+            width: 32px;
+            padding: 0;
+            .inner {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
+            }
+        }
+    }
+    .quiet-msg-pane();
+
+    // Flag: a quiet toggle at the far right of the subject line.
+    a#quiet-msg-flag {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        border-color: transparent;
+        background: transparent;
+        color: @quiet-text-2;
+        &:hover { background: @quiet-hover; }
+        &[aria-pressed="true"] {
+            color: @quiet-accent-text;
+            --quiet-icon: @quiet-icon-flag-on;
+        }
+    }
+
+    // ---- 3. Attachments ----
+    #quiet-attachments {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+
+        &:not(:has(.attachmentslist)) { display: none; }
+
+        .attachmentslist {
+            display: contents;
+
+            li {
+                max-width: 100%;
+                gap: 6px;
+                padding: 4px 4px 4px 10px;
+                border: 1px solid @quiet-border;
+                border-radius: @quiet-radius;
+                background: @quiet-bg-inset;
+                font-size: 13px;
+                line-height: 20px;
+                align-items: center;
+
+                &:before { height: auto; color: @quiet-text-2; }
+
+                a.filename {
+                    height: auto;
+                    line-height: 20px;
+                    color: @quiet-text;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    .attachment-size { margin-left: 6px; color: @quiet-text-2; }
+                }
+                a.dropdown { height: 24px; min-width: 24px; line-height: 24px; }
+            }
+        }
+
+        a.zipdownload {
+            margin-left: 4px;
+            padding: 0;
+            border: 0;
+            background: none;
+            font-size: 13px;
+            color: @quiet-accent-text;
+            text-decoration: none;
+            &:before { content: none; }
+            &:hover { text-decoration: underline; background: none; }
+        }
+    }
+
+    // ---- 4. Message body box ----
+    #message-content .rightcol { margin-top: 0; }
+    #message-objects:not(:empty) { margin-top: 12px; }
+
+    #quiet-body-box {
+        margin-top: 16px;
+        padding: 20px 24px;
+        background-color: @quiet-mail-bg;
+        color: @quiet-mail-text;
+        border: 1px solid @quiet-border;
+        border-radius: @quiet-radius-pane;
+        line-height: 1.6;
+        overflow-x: auto;
+
+        .message-part,
+        .message-htmlpart { padding-top: 0; }
+        .message-part:last-child,
+        .message-htmlpart:last-child { margin-bottom: 0; }
+        .message-part:first-child,
+        .message-htmlpart:first-child { margin-top: 0; }
+    }
+
+    // ---- 5. Row under the box ----
+    #quiet-under-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-top: 12px;
+
+        .quiet-under-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            margin-right: auto;
+
+            a.quiet-act {
+                height: 28px;
+                padding: 0 5px;
+                border: 0;
+                background: transparent;
+                color: @quiet-under-text;
+                font-size: 13px;
+                &:before { display: none; }
+                &:hover { background: @quiet-hover; }
+            }
+        }
+
+        .quiet-under-right {
+            display: flex;
+            margin-left: auto;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            a.quiet-act { padding: 0 10px; }
+            a.quiet-act.delete { margin-left: 18px; }
+        }
+    }
+
+    // Reading pane: Print, Download and Show source live in More (keeps the row on one line); full view keeps them inline.
+    &.action-preview #quiet-u-print,
+    &.action-preview #quiet-u-download,
+    &.action-preview #quiet-u-source { display: none; }
+    &.action-show .popover li:has(> a.quiet-m-dup) { display: none; }
+
+    // Phone-sized window: Roundcube's own toolbars carry the actions.
+    html.quiet-narrow & {
+        #quiet-sender-actions,
+        #quiet-nav,
+        #quiet-under-actions { display: none; }
+    }
+}
+
+// Full view: Elastic's content toolbar is replaced by the actions above on desktop widths only.
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-mail.action-show #layout > #layout-content > .header { display: none; }
+
+    // Full view is one card on the app background (same inset and radius as the list + pane card).
+    body.task-mail.action-show {
+        background-color: @quiet-bg-app;
+
+        #layout-content {
+            margin: 8px;
+            border-radius: @quiet-radius-pane;
+            overflow: clip;
+        }
+    }
+}
+
+// ---- Dark mode: frame is dark, the mail itself stays a white box with dark text ----
+html.dark-mode body.task-mail.action-preview,
+html.dark-mode body.task-mail.action-show {
+    background-color: @quiet-bg-pane-dark;
+
+    #layout-content { background-color: @quiet-bg-pane-dark; }
+    .frame-content { color: @quiet-text-dark; }
+
+    .quiet-subject-row h2.subject { color: @quiet-text-dark; }
+
+    #message-header .quiet-sender {
+        .quiet-avatar { background: @quiet-avatar-bg-dark; color: @quiet-avatar-text-dark; }
+        .quiet-from {
+            a.rcmContactAddress { color: @quiet-text-dark; }
+            .quiet-addr { color: @quiet-text-2-dark; }
+        }
+        .quiet-meta {
+            color: @quiet-text-2-dark;
+            a { color: @quiet-text-2-dark; }
+            .quiet-date:before, .header-links a:before { color: @quiet-text-2-dark; }
+        }
+        .header-headers .header-title { color: @quiet-text-2-dark; }
+        .header-links a { color: @quiet-accent-text-dark; }
+    }
+
+    a.quiet-act {
+        background: @quiet-bg-inset-dark;
+        border-color: @quiet-border-control-dark;
+        color: @quiet-text-dark;
+        &:hover { background: @quiet-hover-dark; color: @quiet-text-dark; }
+        &:focus-visible { outline-color: @quiet-accent-text-dark; }
+
+        &.danger {
+            background: @quiet-danger-bg-dark;
+            border-color: @quiet-danger-border-dark;
+            color: @quiet-danger-text-dark;
+            &:hover { background: lighten(@quiet-danger-bg-dark, 4%); color: @quiet-danger-text-dark; }
+        }
+    }
+    #quiet-nav a.quiet-act.back { background: transparent; border-color: transparent; &:hover { background: @quiet-hover-dark; } }
+    a#quiet-msg-flag {
+        background: transparent;
+        border-color: transparent;
+        color: @quiet-text-2-dark;
+        &:hover { background: @quiet-hover-dark; }
+        &[aria-pressed="true"] { color: @quiet-accent-text-dark; }
+    }
+
+    #quiet-attachments {
+        .attachmentslist li {
+            background: @quiet-bg-inset-dark;
+            border-color: @quiet-border-dark;
+            &:before { color: @quiet-text-2-dark; }
+            a.filename { color: @quiet-text-dark; .attachment-size { color: @quiet-text-2-dark; } }
+        }
+        a.zipdownload { color: @quiet-accent-text-dark; background: none; }
+    }
+
+    #quiet-under-actions .quiet-under-left a.quiet-act {
+        background: transparent;
+        border: 0;
+        color: @quiet-under-text-dark;
+        &:hover { background: @quiet-hover-dark; }
+    }
+
+    // Mail content: white box, dark text, nothing of the mail's own HTML is recoloured.
+    // Elastic's dark rules for text parts, quotes and part headers are put back to their light values.
+    #quiet-body-box {
+        background-color: @quiet-mail-bg;
+        color: @quiet-mail-text;
+        border-color: @quiet-border-dark;
+
+        .message-part,
+        .message-htmlpart {
+            border-color: @color-messagepart-border;
+            color: @quiet-mail-text;
+
+            blockquote {
+                background-color: @color-blockquote-background;
+                border-color: @color-blockquote-0-border;
+                color: @color-blockquote-0;
+
+                span.blockquote-link {
+                    color: @color-black-shade-text;
+                    background: @color-black-shade-bg;
+                    border-color: @color-black-shade-border;
+                }
+
+                blockquote {
+                    color: @color-blockquote-1;
+                    border-color: @color-blockquote-1-border;
+
+                    blockquote {
+                        color: @color-blockquote-2;
+                        border-color: @color-blockquote-2-border;
+                    }
+                }
+            }
+        }
+        .message-htmlpart { margin-top: 0; }
+        .message-part {
+            span.sig { color: @color-mail-signature; }
+            a { color: @quiet-accent-text; }
+        }
+        .message-partheaders {
+            background-color: @color-messagepart-background;
+            border-top: 1px solid @color-messagepart-border;
+            table.headers-table {
+                color: @color-mail-headers;
+                * { font-weight: inherit; }
+                .header-title, .subject { font-weight: bold; }
+            }
+        }
+    }
+}
+
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        body.task-mail.action-show { background-color: @quiet-bg-app-dark; }
+    }
+}

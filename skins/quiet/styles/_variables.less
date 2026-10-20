@@ -1,0 +1,117 @@
+// Quiet design tokens (spec: "Look: tokens"). Every later task uses these names.
+// Light values first, then the -dark twin, which applies under html.dark-mode.
+
+// IBM Plex Sans is bundled (fonts/, SIL OFL; 400/500/600, 400 italic). Fallbacks: Windows, then common Linux UI fonts.
+// Bold (700) has no face of its own and resolves to SemiBold 600, the heaviest weight Quiet uses.
+@quiet-font:            "IBM Plex Sans", "Segoe UI Variable", "Segoe UI", "Noto Sans", Ubuntu, Cantarell, "DejaVu Sans", system-ui, -apple-system, sans-serif;
+@quiet-radius:          6px;   // controls
+@quiet-radius-pane:     8px;   // panes and boxes
+
+// App background (behind panes)
+@quiet-bg-app:          #f0f0f1;
+@quiet-bg-app-dark:     #1a1b1c;
+@quiet-bg-rail:         #e2e5e9;   // icon rail, a step darker than the app background
+@quiet-bg-rail-dark:    #121213;
+// Pane / card surface
+@quiet-bg-pane:         #ffffff;
+@quiet-bg-pane-dark:    #252628;
+// Inset surface (light: white on a #fafafa pane; dark: #1f1f1f, except mail content which stays white)
+@quiet-bg-inset:        #ffffff;
+@quiet-bg-inset-dark:   #1f1f1f;
+@quiet-bg-pane-alt:     #fafafa;
+// Text
+@quiet-text:            #232425;
+@quiet-text-dark:       #e8e8e9;
+@quiet-text-2:          #5f6265;
+@quiet-text-2-dark:     #abacaf;
+// Borders
+@quiet-border:          #dfe0e2;
+@quiet-border-dark:     #393a3c;
+@quiet-border-control:  #d1d1d1;
+@quiet-border-control-dark: #4a4a4a;
+// Accent
+@quiet-accent:          #1769b2;   // fills, primary button
+@quiet-accent-dark:     #185e9e;
+@quiet-accent-text:     #1769b2;   // text / links on surface
+@quiet-accent-text-dark: #6daef1;
+// Colour-scheme swatches in the account menu: each scheme's light accent, fixed (scheme-*.less never redefine these)
+@quiet-swatch-lake:     #1769b2;
+@quiet-swatch-cobalt:   #2b4fc4;
+@quiet-swatch-teal:     #0f766e;
+@quiet-swatch-indigo:   #4f46b8;
+// Selected rows (dark values: builder picks; muted blues, text #e8e8e8 stays > 4.5:1)
+@quiet-sel:             #eaf2fb;
+@quiet-sel-dark:        #2a3847;
+@quiet-sel-multi:       #d0e3f7;
+@quiet-sel-multi-dark:  #344e68;
+// Danger tint (Delete). Dark bg/border: builder picks.
+@quiet-danger-bg:       #fdf3f4;
+@quiet-danger-bg-dark:  #3d2123;
+@quiet-danger-border:   #f1bbbc;
+@quiet-danger-border-dark: #6b3538;
+@quiet-danger-text:     #b10e1c;
+@quiet-danger-text-dark: #ff9a9a;
+
+// Mail content stays a white box with dark text even in dark mode.
+@quiet-mail-bg:         #ffffff;
+@quiet-mail-text:       #242424;
+
+// ---- Map Elastic's color variables onto the tokens (Elastic's LESS is lazy: last definition wins) ----
+@color-main:                @quiet-accent;
+@color-main-dark:           @quiet-accent;
+@color-font:                @quiet-text;
+@color-link:                @quiet-accent-text;
+@color-link-hover:          darken(@quiet-accent-text, 10%);
+@color-border:              @quiet-border;
+@color-black-shade-text:    @quiet-text-2;
+@color-black-shade-border:  @quiet-border;
+@color-black-shade-bg:      @quiet-bg-app;
+@color-layout-border:               @quiet-border;
+@color-layout-sidebar-background:   @quiet-bg-pane;
+@color-layout-list-background:      @quiet-bg-pane;
+@color-layout-content-background:   @quiet-bg-pane;
+@color-layout-header-background:    @quiet-bg-pane;
+@color-layout-footer-background:    @quiet-bg-pane;
+@color-list-selected:               @quiet-text;
+@color-list-selected-background:    @quiet-sel;
+@color-list-border:                 @quiet-border;
+@color-input-border:                @quiet-border-control;
+@color-btn-primary-background:      @quiet-accent;
+
+@color-dark-background:     @quiet-bg-app-dark;
+@color-dark-font:           @quiet-text-dark;
+@color-dark-border:         @quiet-border-dark;
+@color-dark-hint:           @quiet-text-2-dark;
+@color-dark-main:           @quiet-accent-dark;
+@color-dark-list-selected-background: @quiet-sel-dark;
+@color-dark-list-border:    @quiet-border-dark;
+@color-dark-input-border:   @quiet-border-control-dark;
+@color-dark-input-background: @quiet-bg-inset-dark;
+@color-dark-btn-primary-background: @quiet-accent-dark;
+
+// Dialogs and popovers use the card surface (Elastic's dark popover colors are teal-ish).
+@color-dark-popover-background: @quiet-bg-pane-dark;
+@color-dark-popover-border:     @quiet-border-dark;
+
+// Inputs, add-on boxes, checkboxes and the phone menu header (otherwise Elastic's slate and blue survive).
+@color-input-addon-background:      @quiet-bg-pane-alt;
+@color-image-upload-background:     @quiet-bg-app;
+@color-popover-mobile-header:               @quiet-text;
+@color-popover-mobile-header-background:    @quiet-bg-pane;
+@color-popover-mobile-dropbutton-background: @quiet-bg-pane-alt;
+
+@color-dark-list-selected:              @quiet-text-dark;
+@color-dark-list-badge-background:      @quiet-border-dark;
+@color-dark-input:                      @quiet-text-dark;
+@color-dark-input-focus:                @quiet-text-dark;
+@color-dark-input-border-focus:         @quiet-accent-text-dark;
+@color-dark-input-background-focus:     @quiet-bg-inset-dark;
+@color-dark-input-addon-background:     @quiet-bg-pane-dark;
+@color-dark-input-addon-background-focus: @quiet-bg-app-dark;
+@color-dark-checkbox:                   @quiet-border-control-dark;
+@color-dark-checkbox-checked:           @quiet-accent-dark;
+@color-dark-btn:                        @quiet-text-dark;
+@color-dark-btn-secondary-background:   @quiet-bg-pane-dark;
+@color-dark-btn-danger-background:      @quiet-danger-bg-dark;
+@color-dark-scrollbar-thumb:            @quiet-border-control-dark;
+@color-dark-scrollbar-track:            @quiet-bg-pane-dark;

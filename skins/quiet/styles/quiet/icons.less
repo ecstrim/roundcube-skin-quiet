@@ -1,0 +1,159 @@
+// Stroke icons for the redesigned screens. Elastic draws its icons as filled font glyphs; here the same
+// pseudo-elements keep their boxes (so layout does not move) but draw a stroke icon through a CSS mask.
+// Secondary icons use --quiet-icon-color (the @quiet-text-2 token); toolbar buttons keep the colour Elastic
+// gives them (it carries the disabled state).
+
+@import "_icons";
+
+:root { --quiet-icon-color: @quiet-text-2; }
+html.dark-mode { --quiet-icon-color: @quiet-text-2-dark; }
+
+.qi(@img, @size: 1.25em) {
+    content: "" !important;
+    min-height: 1em;  // empty content: keep a glyph-tall box where the generated rules let the height follow the line
+    background-color: currentColor;
+    -webkit-mask: @img center / @size no-repeat;
+    mask: @img center / @size no-repeat;
+}
+.qi-soft(@img, @size: 1.25em) {
+    .qi(@img, @size);
+    color: var(--quiet-icon-color);
+}
+// Popup menu entries: Elastic sizes the glyph box by its text; an empty (masked) box needs the row height.
+.qi-menu(@img, @size: 1.25em) {
+    .qi-soft(@img, @size);
+    height: @listing-line-height !important;
+}
+
+// List paperclip (all widths: it is the same marker on the phone)
+body.task-mail .messagelist span.attachment span {
+    color: var(--quiet-icon-color);
+    &:before {
+        content: "" !important;
+        display: block;
+        width: 100%;
+        height: 1em;
+        background-color: currentColor;
+        -webkit-mask: @quiet-icon-clip center / .85em no-repeat;
+        mask: @quiet-icon-clip center / .85em no-repeat;
+    }
+}
+
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    // ---- search bars (mail list header, Contacts, Settings lists) ----
+    body.task-mail.action-none #quiet-list-header,
+    body.task-addressbook #layout-list,
+    body.task-settings #layout-list {
+        .searchbar {
+            form:before { .qi-soft(@qi-search, 1em); }
+            a.options:before { .qi-soft(@qi-chev-down, .95em); }
+            &.open a.options:before { .qi-soft(@qi-chev-up, .95em); }
+            a.reset:before { .qi-soft(@qi-x, .9em); }
+            a.unread:before { .qi-soft(@quiet-icon-mail, 1em); }
+        }
+    }
+
+    // ---- compose: From identities pencil, address-book picker, per-field remove ----
+    body.task-mail.action-compose .compose-headers .input-group-append .input-group-text {
+        &.edit:before { .qi(@quiet-icon-pencil, 1.1em); }
+        &.recipient:before { .qi(@qi-addrbook, 1.25em); }
+        &.delete:before { .qi(@qi-x, 1em); }
+    }
+
+    // ---- popup menus: folder actions, list options, selection ----
+    .popover .menu a {
+        &.expunge:before { .qi-menu(@qi-compact); }
+        &.purge:before { .qi-menu(@qi-eraser); }
+        &.read:before { .qi-menu(@quiet-icon-mail-open); }
+        &.unread:before,
+        &.select.unread:before { .qi-menu(@quiet-icon-mail); }
+        &.folders:before { .qi-menu(@qi-folder); }
+        &.listoptions:before { .qi-menu(@qi-sliders); }
+        &.select:before { .qi-menu(@qi-cursor); }
+        &.select.all:before { .qi-menu(@qi-selall); }
+        &.select.page:before { .qi-menu(@qi-selpage); }
+        &.select.none:before { .qi-menu(@qi-selnone); }
+        &.select.invert:before { .qi-menu(@qi-invert); }
+        &.select.flagged:before { .qi-menu(@quiet-icon-flag); }
+        &.delete:before { .qi-menu(@quiet-icon-delete); }
+        &.create:before { .qi-menu(@qi-plus); }
+        &.print:before { .qi-menu(@qi-print); }
+        &.download:before, &.export:before { .qi-menu(@qi-download); }
+        &.import:before { .qi-menu(@qi-upload); }
+        &.more:before { .qi-menu(@quiet-icon-dots); }
+    }
+
+    // ---- Contacts and Settings: toolbar buttons, address books, section lists ----
+    body.task-addressbook,
+    body.task-settings {
+        #layout-content > .header .toolbar a,
+        #layout-list > .header .toolbar a {
+            &.create:before { .qi(@qi-plus, 1.3em); }
+            &.print:before { .qi(@qi-print, 1.3em); }
+            &.delete:before { .qi(@quiet-icon-delete, 1.3em); }
+            &.purge:before { .qi(@qi-eraser, 1.3em); }
+            &.search:before { .qi(@qi-search, 1.3em); }
+            &.import:before { .qi(@qi-upload, 1.3em); }
+            &.export:before { .qi(@qi-download, 1.3em); }
+            &.dropdown:before { .qi(@qi-chev-down, 1.1em); }
+            &.more:before { .qi(@quiet-icon-dots, 1.3em); }
+            &.select:before { .qi(@qi-cursor, 1.3em); }
+            &.edit:before { .qi(@quiet-icon-pencil, 1.3em); }
+        }
+
+        #layout-sidebar .listing.iconized li {
+            &.preferences > a:before { .qi-soft(@qi-sliders); }
+            &.folders > a:before { .qi-soft(@qi-folder); }
+            &.responses > a:before { .qi-soft(@qi-comment); }
+            &.identities > a:before { .qi-soft(@qi-idcard); }
+            &.password > a:before { .qi-soft(@qi-lock); }
+            &.addressbook a:before { .qi-soft(@qi-addrbook); }
+            &.contactgroup a:before { .qi-soft(@qi-users); }
+            &.contactsearch a:before { .qi-soft(@qi-search); }
+        }
+        #layout-sidebar .settings-default-icon li > a:before { .qi-soft(@qi-cog); }
+        #layout-sidebar .listing.iconized li a:before { height: @listing-line-height; }
+
+        #layout-list .listing.iconized tr td:before { height: @listing-line-height; }
+        #layout-list .listing.iconized tr {
+            &.general > td.section:before { .qi-soft(@qi-desktop); }
+            &.mailbox > td.section:before { .qi-soft(@quiet-icon-mail); }
+            &.mailview > td.section:before { .qi-soft(@qi-inbox); }
+            &.compose > td.section:before { .qi-soft(@quiet-icon-send); }
+            &.addressbook > td.section:before { .qi-soft(@qi-users); }
+            &.folders > td.section:before { .qi-soft(@qi-folder); }
+            &.server > td.section:before { .qi-soft(@qi-server); }
+            &.encryption > td.section:before { .qi-soft(@qi-lock); }
+            &.contact.person td.name:before { .qi-soft(@qi-user); }
+            &.contact.group td.name:before { .qi-soft(@qi-users); }
+        }
+        #layout-list .settings-default-icon tr > td.section:before { .qi-soft(@qi-cog); }
+    }
+
+    // ---- folder lists: mail and compose folder panes, Settings, and the folder-selector popups ----
+    body.task-mail #layout-sidebar .folderlist,
+    #quiet-compose-folders .folderlist,
+    body.task-settings #layout-list .folderlist,
+    .popover .folderlist {
+        li a:before { .qi-soft(@qi-folder); height: @listing-line-height; }
+        li.inbox > a:before { .qi-soft(@qi-inbox); }
+        li.drafts > a:before { .qi-soft(@quiet-icon-pencil); }
+        li.sent > a:before { .qi-soft(@quiet-icon-send); }
+        li.trash > a:before { .qi-soft(@quiet-icon-delete); }
+        li.junk > a:before { .qi-soft(@qi-ban); }
+        li.archive > a:before { .qi-soft(@quiet-icon-archive); }
+        li.ns-shared > a:before { .qi-soft(@qi-users); }
+        li.ns-other > a:before { .qi-soft(@qi-user); }
+    }
+}
+
+// Tablet: the button that opens the folder pane (Elastic's filled folder glyph)
+@media screen and (min-width: (@screen-width-small + 1px)) and (max-width: @screen-width-large) {
+    body.task-mail.action-none #layout-list > .header a.back-sidebar-button:before { .qi(@qi-folder, 1em); }
+}
+
+// Phone off-canvas menu: Elastic gives the glyph box a fixed 1em height at the top of a tall row; let it follow the
+// line so the stroke icon sits beside its label.
+@media screen and (max-width: @screen-width-small) {
+    #layout-menu a:before { height: auto !important; }
+}

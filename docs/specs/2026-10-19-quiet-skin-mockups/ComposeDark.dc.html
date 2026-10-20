@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New message, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#62abf5}a:hover{color:#96c6fa}
+</style>
+</helmet>
+<div style="width: 100%; height: 800px; display: flex; font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif; font-size: 14px; color: #e8e8e8; background: #1b1b1b; overflow: hidden">
+
+  <nav aria-label="Apps" style="width: 52px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 12px">
+    <button aria-label="Mail" style="width: 40px; height: 40px; border: 0; border-radius: 6px; background: #2e2e2e; color: #62abf5; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></button>
+    <button aria-label="Contacts" style="width: 40px; height: 40px; border: 0; border-radius: 6px; background: transparent; color: #adadad; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M17 14c2.2 0 3.9 1.5 4.5 4"></path></svg></button>
+    <button aria-label="Settings" style="width: 40px; height: 40px; border: 0; border-radius: 6px; background: transparent; color: #adadad; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg></button>
+    <div style="flex: 1"></div>
+    <button aria-label="Account: Klaus" style="width: 32px; height: 32px; margin-bottom: 12px; border-radius: 50%; border: 0; background: #115ea3; color: #ffffff; font: inherit; font-weight: 600">K</button>
+  </nav>
+
+  <aside aria-label="Folders" style="width: 210px; flex-shrink: 0; display: flex; flex-direction: column; padding: 12px 8px 12px 4px; gap: 2px">
+    <button style="height: 36px; margin: 0 4px 14px; border: 0; border-radius: 6px; background: #115ea3; color: #ffffff; font: inherit; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>New mail</button>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 7px 12px; border-radius: 6px; color: #e8e8e8; text-decoration: none"><span>Inbox</span><span style="color: #62abf5">12</span></a>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 7px 12px; border-radius: 6px; background: #2e2e2e; color: #e8e8e8; text-decoration: none; font-weight: 600"><span>Drafts</span><span style="color: #adadad">3</span></a>
+    <a href="#" style="padding: 7px 12px; border-radius: 6px; color: #e8e8e8; text-decoration: none">Sent</a>
+    <a href="#" style="padding: 7px 12px; border-radius: 6px; color: #e8e8e8; text-decoration: none">Archive</a>
+    <a href="#" style="padding: 7px 12px; border-radius: 6px; color: #e8e8e8; text-decoration: none">Junk</a>
+    <a href="#" style="padding: 7px 12px; border-radius: 6px; color: #e8e8e8; text-decoration: none">Trash</a>
+    <div style="flex: 1"></div>
+    <div style="padding: 8px 12px; font-size: 12px; color: #adadad">
+      <div style="height: 4px; border-radius: 2px; background: #3d3d3d; margin-bottom: 6px"><div style="width: 38%; height: 4px; border-radius: 2px; background: #62abf5"></div></div>
+      1.9 GB of 5 GB used
+    </div>
+  </aside>
+
+  <main style="flex: 1; min-width: 0; margin: 8px 8px 8px 0; background: #262626; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden">
+
+    <div role="toolbar" aria-label="Compose actions" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 10px 20px; border-bottom: 1px solid #3a3a3a">
+      <div style="flex: 1"></div>
+      <button style="height: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #c8c8c8; font: inherit; font-size: 13px">Signature</button>
+      <button style="height: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #c8c8c8; font: inherit; font-size: 13px">Responses</button>
+      <button style="height: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #c8c8c8; font: inherit; font-size: 13px">Options</button>
+      <button style="height: 28px; margin-left: 16px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #ff9a9a; font: inherit; font-size: 13px; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>Discard</button>
+    </div>
+
+    <div style="padding: 4px 20px 0">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 40px; border-bottom: 1px solid #333333">
+        <label for="c-from" style="width: 64px; color: #adadad">From</label>
+        <select id="c-from" style="flex: 1; height: 30px; border: 0; background: transparent; color: #e8e8e8; font: inherit"><option>Klaus &lt;klaus@example.org&gt;</option></select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 40px; border-bottom: 1px solid #333333; flex-wrap: wrap">
+        <label for="c-to" style="width: 64px; color: #adadad">To</label>
+        <div style="flex: 1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+          <span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 4px 0 10px; border-radius: 12px; background: #333a44; color: #e8e8e8; font-size: 13px">Anna Ferri <button aria-label="Remove Anna Ferri" style="width: 18px; height: 18px; border: 0; border-radius: 50%; background: transparent; color: #adadad; font: inherit; font-size: 13px">×</button></span>
+          <input id="c-to" style="flex: 1; min-width: 120px; height: 30px; border: 0; outline: 0; background: transparent; color: #e8e8e8; font: inherit">
+        </div>
+        <span style="display: flex; gap: 10px; font-size: 13px"><a href="#">Cc</a><a href="#">Bcc</a><a href="#">Reply-To</a></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 40px; border-bottom: 1px solid #333333">
+        <label for="c-subj" style="width: 64px; color: #adadad">Subject</label>
+        <input id="c-subj" value="Re: Backup report for October" style="flex: 1; height: 30px; border: 0; outline: 0; background: transparent; color: #e8e8e8; font: inherit; font-weight: 600">
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 0">
+        <span style="display: flex; gap: 8px; align-items: center; padding: 6px 10px; border: 1px solid #3d3d3d; border-radius: 6px; font-size: 13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#adadad" stroke-width="1.8" aria-hidden="true"><path d="M14 3H6v18h12V7z"></path><path d="M14 3v4h4"></path></svg>disk-order.pdf <span style="color: #adadad">84 KB</span><button aria-label="Remove attachment" style="border: 0; background: transparent; color: #adadad; font: inherit">×</button></span>
+        <div style="flex: 1"></div>
+        <button style="height: 32px; padding: 0 12px; border: 1px solid #4a4a4a; border-radius: 6px; background: transparent; color: #e8e8e8; font: inherit; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 11l-8.5 8.5a5 5 0 01-7-7L13 4a3.5 3.5 0 015 5l-8.5 8.5a2 2 0 01-3-3L14 7"></path></svg>Attach</button>
+      </div>
+    </div>
+
+    <div role="toolbar" aria-label="Formatting" style="display: flex; align-items: center; gap: 2px; margin: 0 20px; padding: 4px; border-radius: 6px; background: #2e2e2e; color: #c8c8c8">
+      <button aria-label="Bold" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; font-weight: 700">B</button>
+      <button aria-label="Italic" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; font-style: italic">I</button>
+      <button aria-label="Underline" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; text-decoration: underline">U</button>
+      <span style="width: 1px; height: 18px; background: #444444; margin: 0 4px"></span>
+      <button aria-label="Bulleted list" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></svg></button>
+      <button aria-label="Link" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"></path></svg></button>
+      <button aria-label="Insert image" style="width: 28px; height: 28px; border: 0; border-radius: 4px; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="M21 16l-5-5-8 8"></path></svg></button>
+      <div style="flex: 1"></div>
+      <button style="height: 28px; padding: 0 8px; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; font-size: 12px">HTML ▾</button>
+    </div>
+
+    <div style="flex: 1; margin: 12px 20px 12px; padding: 16px 20px; border: 1px solid #3a3a3a; border-radius: 8px; background: #1f1f1f; line-height: 1.6; color: #e8e8e8; overflow: hidden">
+      <p style="margin: 0 0 12px">Thanks Anna, I'll order two replacements this week. Quote attached.</p>
+      <p style="margin: 0 0 20px">Klaus</p>
+      <div style="padding-left: 12px; border-left: 2px solid #4a4a4a; color: #adadad; font-size: 13px">
+        <div style="margin-bottom: 6px">On Today 10:42, Anna Ferri wrote:</div>
+        All snapshots finished without errors this month. Pool usage is at 71%, and two of the older disks are starting to report reallocated sectors…
+      </div>
+    </div>
+
+    <div role="toolbar" aria-label="Send actions" style="display: flex; align-items: center; gap: 6px; padding: 0 20px 16px">
+      <button style="height: 32px; padding: 0 16px; border: 0; border-radius: 6px; background: #115ea3; color: #ffffff; font: inherit; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"></path></svg>Send</button>
+      <button style="height: 32px; padding: 0 12px; border: 1px solid #4a4a4a; border-radius: 6px; background: transparent; color: #e8e8e8; font: inherit">Save draft</button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+From: Carol Accounts <carol@example.org>
+To: Klaus <klaus@localhost>
+Subject: Fixture with-2-attachments: contract and invoice
+Date: Sun, 18 Oct 2026 08:56:00 +0000
+Message-ID: <with-2-attachments@quiet.test>
+X-Quiet-Fixture: with-2-attachments
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2022818993923204124=="
+
+--===============2022818993923204124==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Please find two files attached.
+
+--===============2022818993923204124==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="file-01-report.bin"
+MIME-Version: 1.0
+
+YXR0YWNobWVudCAxIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDEgb2Ygd2l0aC0y
+LWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMSBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVu
+dCAxIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDEgb2Ygd2l0aC0yLWF0dGFjaG1l
+bnRzCmF0dGFjaG1lbnQgMSBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAxIG9mIHdp
+dGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDEgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFj
+aG1lbnQgMSBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAxIG9mIHdpdGgtMi1hdHRh
+Y2htZW50cwphdHRhY2htZW50IDEgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMSBv
+ZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAxIG9mIHdpdGgtMi1hdHRhY2htZW50cwph
+dHRhY2htZW50IDEgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMSBvZiB3aXRoLTIt
+YXR0YWNobWVudHMKYXR0YWNobWVudCAxIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50
+IDEgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMSBvZiB3aXRoLTItYXR0YWNobWVu
+dHMKYXR0YWNobWVudCAxIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDEgb2Ygd2l0
+aC0yLWF0dGFjaG1lbnRzCg==
+
+--===============2022818993923204124==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="file-02-report.bin"
+MIME-Version: 1.0
+
+YXR0YWNobWVudCAyIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDIgb2Ygd2l0aC0y
+LWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMiBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVu
+dCAyIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDIgb2Ygd2l0aC0yLWF0dGFjaG1l
+bnRzCmF0dGFjaG1lbnQgMiBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAyIG9mIHdp
+dGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDIgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFj
+aG1lbnQgMiBvZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAyIG9mIHdpdGgtMi1hdHRh
+Y2htZW50cwphdHRhY2htZW50IDIgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMiBv
+ZiB3aXRoLTItYXR0YWNobWVudHMKYXR0YWNobWVudCAyIG9mIHdpdGgtMi1hdHRhY2htZW50cwph
+dHRhY2htZW50IDIgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMiBvZiB3aXRoLTIt
+YXR0YWNobWVudHMKYXR0YWNobWVudCAyIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50
+IDIgb2Ygd2l0aC0yLWF0dGFjaG1lbnRzCmF0dGFjaG1lbnQgMiBvZiB3aXRoLTItYXR0YWNobWVu
+dHMKYXR0YWNobWVudCAyIG9mIHdpdGgtMi1hdHRhY2htZW50cwphdHRhY2htZW50IDIgb2Ygd2l0
+aC0yLWF0dGFjaG1lbnRzCg==
+
+--===============2022818993923204124==--

@@ -1,0 +1,282 @@
+// Contacts, Settings, dialogs and popups: same style as mail, no special layout.
+// Desktop panes are scoped to the addressbook/settings tasks so mail rules stay untouched.
+
+// ---- Contacts and Settings: panes like the mail screen ----
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-addressbook,
+    body.task-settings {
+        #layout-sidebar > .header {
+            background: transparent;
+            border: 0;
+            color: @quiet-text-2;
+        }
+
+        #layout-sidebar .listing {
+            li, li > a { border: 0 !important; }
+            li > a {
+                margin: 1px 0;
+                border-radius: @quiet-radius;
+                color: @quiet-text;
+            }
+            li:not(.selected) > a:hover { background-color: fade(@quiet-text, 6%); }
+            li.selected,
+            li.selected > a { background-color: transparent; }
+            li.selected > a {
+                background-color: @quiet-bg-pane;
+                color: @quiet-text;
+                font-weight: 600;
+            }
+        }
+
+        #layout-list {
+            margin: 8px 0;
+            border-radius: @quiet-radius-pane 0 0 @quiet-radius-pane;
+            border-right: 1px solid @quiet-border;
+            overflow: hidden;
+        }
+
+        #layout-content { margin: 8px 8px 8px 0; border-radius: 0 @quiet-radius-pane @quiet-radius-pane 0; overflow: hidden; }
+    }
+}
+
+// Settings: the list and content headers carry only back buttons and a hidden title (no toolbar), which left an
+// empty band above both columns. Collapsed where the folder pane is visible; below 1200px the list header keeps
+// the button that opens it. Headers with a toolbar (Contacts, Folders, Identities, Responses) stay.
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    // the content header never holds a control without a toolbar at these widths (its back button is hidden)
+    body.task-settings #layout-content > .header:not(:has(.toolbar)) { display: none; }
+}
+@media screen and (min-width: (@screen-width-large + 1px)) {
+    body.task-settings #layout-list > .header:not(:has(.toolbar)) { display: none; }
+}
+
+// Settings and Contacts forms (iframes) sit on the card surface, not the app background, and the frame follows the card's corners.
+body.formcontainer { background-color: @quiet-bg-pane; }
+html.dark-mode body.formcontainer { background-color: @quiet-bg-pane-dark; }
+@media screen and (min-width: (@screen-width-small + 1px)) {
+    body.task-addressbook,
+    body.task-settings {
+        #layout-content .iframe-wrapper { overflow: hidden; border-radius: inherit; }
+    }
+}
+
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        body.task-addressbook,
+        body.task-settings {
+            #layout-sidebar > .header { color: @quiet-text-2-dark; }
+
+            #layout-sidebar .listing {
+                li > a { color: @quiet-text-dark; }
+                li:not(.selected) > a:hover { background-color: fade(@quiet-text-dark, 8%); }
+                li.selected > a { background-color: @quiet-bg-pane-dark; color: @quiet-text-dark; }
+            }
+
+            #layout-list { border-right-color: @quiet-border-dark; }
+        }
+    }
+}
+
+// ---- Dialogs (jQuery UI) and popovers: card style ----
+.ui-dialog {
+    border-radius: @quiet-radius-pane;
+    border: 1px solid @quiet-border;
+    background-color: @quiet-bg-pane;
+    color: @quiet-text;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .18);
+    overflow: hidden;
+
+    .ui-dialog-titlebar,
+    .ui-dialog-buttonpane { border-color: @quiet-border; }
+    .ui-dialog-titlebar { background-color: @quiet-bg-pane; border-radius: 0; }
+    .ui-dialog-title { color: @quiet-text; font-weight: 600; }
+    .ui-dialog-content { background-color: @quiet-bg-pane; }
+    .ui-dialog-buttonpane { background-color: @quiet-bg-pane; border-radius: 0; }
+
+    // Card layout: no title rule or footer band, a ghost close button, right-aligned text buttons.
+    .ui-dialog-titlebar {
+        height: auto;
+        padding: 16px 56px 8px 20px;
+        border-bottom: 0;
+    }
+    .ui-dialog-title {
+        padding: 0;
+        font-size: 16px;
+        line-height: 24px;
+    }
+    .ui-dialog-titlebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin: 12px 12px 0 0;
+        padding: 0;
+        border-radius: @quiet-radius;
+        color: @quiet-text-2;
+        &:before { width: 18px !important; height: 18px; float: none; }
+        &:hover { background: @quiet-bg-app; color: @quiet-text; }
+    }
+    .ui-dialog-content:not(.iframe) { padding: 8px 20px 12px; }
+    .ui-dialog-buttonpane {
+        margin: 0;
+        padding: 4px 20px 16px;
+        border-top: 0;
+        .ui-dialog-buttonset {
+            gap: 8px;
+            .btn, a.btn-link { margin: 0; min-width: 80px; }
+        }
+    }
+    // Keep resizing, drop the corner grip glyph
+    .ui-resizable-se { background-image: none !important; }
+    .ui-resizable-se:before { display: none; }
+}
+
+html:not(.layout-small):not(.layout-phone) .popover {
+    border-radius: @quiet-radius-pane;
+    border: 1px solid @quiet-border;
+    background-color: @quiet-bg-pane;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+    overflow: hidden;
+
+    .popover-body { background-color: transparent; }
+}
+
+html.dark-mode {
+    .ui-dialog {
+        border-color: @quiet-border-dark;
+        background-color: @quiet-bg-pane-dark;
+        color: @quiet-text-dark;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, .55);
+
+        .ui-dialog-titlebar,
+        .ui-dialog-buttonpane { border-color: @quiet-border-dark; }
+        .ui-dialog-titlebar,
+        .ui-dialog-content,
+        .ui-dialog-buttonpane { background-color: @quiet-bg-pane-dark; }
+        .ui-dialog-title { color: @quiet-text-dark; }
+        .ui-dialog-titlebar-close { color: @quiet-text-2-dark; &:hover { background: @quiet-bg-app-dark; color: @quiet-text-dark; } }
+        .ui-dialog-content:not(.iframe) { background-color: @quiet-bg-pane-dark; }
+    }
+
+    &:not(.layout-small):not(.layout-phone) .popover {
+        border-color: @quiet-border-dark;
+        background-color: @quiet-bg-pane-dark;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+    }
+}
+
+// ---- Tablet widths (769-1200px): Elastic hides the folder pane; its list header (hidden by the mail list
+// rules) must keep the one button that opens it. Everything else in that header stays hidden. ----
+@media screen and (min-width: (@screen-width-small + 1px)) and (max-width: @screen-width-large) {
+    // The folder-pane button sits on the search row (left of the search box) instead of a row of its own.
+    body.task-mail.action-none #layout-list {
+        position: relative;
+
+        > .header {
+            position: absolute !important;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+            display: flex !important;
+            width: 32px;
+            min-height: 0;
+            height: 32px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+
+            > * { display: none !important; }
+            > a.back-sidebar-button {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                padding: 0;
+            }
+        }
+
+        #quiet-list-header .searchbar { margin-left: 38px; }
+    }
+}
+
+// Elastic's dark theme draws a 1px line at the rail's right edge; the rail has no edge in Quiet.
+html.dark-mode {
+    @media screen and (min-width: (@screen-width-xs + 1px)) {
+        #layout-menu { border-right: 0 !important; }
+    }
+}
+
+// Custom select popups (Elastic's pretty select, e.g. the list filter): rounded items, no row lines,
+// accent check on the current value.
+html:not(.layout-small):not(.layout-phone) .popover.select-menu {
+    .popover-header { display: none; }
+    .popover-body { padding: 4px; }
+    .listing li {
+        border: 0;
+        a {
+            position: relative;
+            padding: 0 12px 0 32px;
+            border: 0;
+            border-radius: @quiet-radius;
+            color: @quiet-text;
+            font-size: 13px;
+            line-height: 32px;
+            &:before { content: none !important; }
+            &:hover, &:focus { background-color: @quiet-hover; outline: 0; }
+            &.selected { font-weight: 600; }
+            &.selected:after {
+                content: "";
+                position: absolute;
+                left: 10px;
+                top: 9px;
+                width: 14px;
+                height: 14px;
+                background-color: @quiet-accent-text;
+                -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+        }
+    }
+}
+html.dark-mode:not(.layout-small):not(.layout-phone) .popover.select-menu .listing li a {
+    color: @quiet-text-dark;
+    &:hover, &:focus { background-color: @quiet-hover-dark; }
+    &.selected:after { background-color: @quiet-accent-text-dark; }
+}
+
+// Popup menus (list options, More, ...): same item style as the select popups — no row lines, rounded hover,
+// 13px text, thin separators.
+html:not(.layout-small):not(.layout-phone) .popover:not(.select-menu) ul.menu.listing {
+    padding: 4px;
+
+    li { border: 0 !important; background: transparent; }
+    li > a {
+        margin: 0;
+        border: 0;
+        border-radius: @quiet-radius;
+        color: @quiet-text;
+        font-size: 13px;
+        line-height: 34px;
+        padding-right: 16px;
+
+        &:before { height: 34px !important; line-height: 34px; }
+        &:not(.disabled):hover, &:not(.disabled):focus { background-color: @quiet-hover; color: @quiet-text; outline: 0; }
+        &.disabled { color: @quiet-text-2; opacity: .6; }
+    }
+    li.quiet-menu-label {
+        padding: 8px 12px 2px;
+        font-size: 12px;
+        color: @quiet-text-2;
+        &:empty { padding: 0; margin: 4px 8px; border-top: 1px solid @quiet-border !important; }
+    }
+}
+html.dark-mode:not(.layout-small):not(.layout-phone) .popover:not(.select-menu) ul.menu.listing {
+    li > a {
+        color: @quiet-text-dark;
+        &:not(.disabled):hover, &:not(.disabled):focus { background-color: @quiet-hover-dark; color: @quiet-text-dark; }
+        &.disabled { color: @quiet-text-2-dark; }
+    }
+    li.quiet-menu-label { color: @quiet-text-2-dark; &:empty { border-top-color: @quiet-border-dark !important; } }
+}
