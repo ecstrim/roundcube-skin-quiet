@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { BASE_PLAIN, FIXTURES, login } from './helpers';
 
 test('stack serves Roundcube 1.6.20 and login works', async ({ page }) => {
@@ -29,4 +30,14 @@ test('main instance has archive plugin configured', async ({ page }) => {
   await login(page);
   const archive = await page.evaluate(() => (window as any).rcmail.env.archive_folder);
   expect(archive).toBe('Archive');
+});
+
+test('skin references its minified stylesheets by name', () => {
+  // Roundcube resolves "/styles/x.css" by exact name across quiet, then elastic. A leftover non-minified
+  // skins/elastic/styles/x.css (from an in-place upgrade) would win and load Elastic's CSS instead of Quiet's.
+  const files = ['skins/quiet/templates/includes/layout.html', 'skins/quiet/meta.json'];
+  for (const f of files) {
+    const text = readFileSync(f, 'utf8').replace(/<link rel="stylesheet\/less"[^>]*>/g, '');
+    expect(text, f).not.toMatch(/\/styles\/(styles|print|embed)\.css/);
+  }
 });

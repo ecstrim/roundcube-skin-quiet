@@ -24,6 +24,10 @@ declares `"extends": "elastic"` and falls back to Elastic for everything it does
 
 The built CSS (`styles/*.min.css`) is committed, so there is no build step on the server.
 
+Upgraded in place from an older Roundcube? Quiet links its stylesheets by their minified names
+(`styles.min.css`), so leftover non-minified Elastic files (`skins/elastic/styles/styles.css`, `embed.css`,
+`print.css`, from 1.5 or earlier) no longer take over. Elastic 1.6 doesn't use those files, so they can be deleted.
+
 ## Dark mode
 
 Quiet uses Elastic's mechanism, so an existing choice carries over. The colour mode is the `colorMode` cookie
@@ -93,7 +97,7 @@ Quiet overrides these Elastic templates: `layout` (includes), `menu` (includes),
 
 1. Diff each of them against the new Elastic (`skins/elastic/templates/...`, `skins/elastic/watermark.html`) and
    carry over what changed: new elements, ids, attributes and scripts. `layout.html` must keep its stylesheet links
-   (`styles.css`, `print.css`, `embed.css`), the colour-scheme script and the dark-mode early script.
+   (`styles.min.css`, `print.min.css`, and `embed.min.css` in `meta.json`, by their minified names, see Install), the colour-scheme script and the dark-mode early script.
 2. Rebuild the CSS against the new Elastic: `make css RC_TAG=<new image tag>` (default `1.6.20-apache`). This
    re-copies Elastic's LESS from that image into `skins/elastic/` (git-ignored; delete the folder first when the
    tag changed) and rewrites `styles/*.min.css`. Commit the result.
