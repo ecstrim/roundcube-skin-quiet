@@ -4,6 +4,26 @@
 compose, contacts and settings, and has a full dark mode. Install and credits: [skins/quiet/README.md](skins/quiet/README.md).
 Design and mockups: [docs/specs/2026-10-19-quiet-skin-design.md](docs/specs/2026-10-19-quiet-skin-design.md).
 
+## Screenshots
+
+![Inbox with the reading pane, light](docs/screenshots/mail-light.png)
+
+![Inbox with the reading pane, dark](docs/screenshots/mail-dark.png)
+
+| Compose | Login |
+| --- | --- |
+| ![Compose](docs/screenshots/compose.png) | ![Login](docs/screenshots/login.png) |
+
+| Phone: list | Phone: message (dark) |
+| --- | --- |
+| <img src="docs/screenshots/phone-list.png" alt="Phone message list" width="300"> | <img src="docs/screenshots/phone-message.png" alt="Phone message view, dark" width="300"> |
+
+Four colour schemes, picked from the account menu: Lake blue (default, above), Cobalt, Deep teal and Ink indigo.
+
+| Cobalt | Deep teal | Ink indigo |
+| --- | --- | --- |
+| ![Cobalt](docs/screenshots/scheme-cobalt.png) | ![Teal](docs/screenshots/scheme-teal.png) | ![Indigo](docs/screenshots/scheme-indigo.png) |
+
 ## Dev stack
 
 Everything runs in Docker (no Node or PHP on the host). The stack is a throwaway GreenMail/Dovecot plus three
@@ -31,6 +51,8 @@ make down    # stop the stack
 
 `make shots` writes mail, message, compose, login, contacts and settings (plus the all-headers dialog) at 1440px
 light and dark, 1024px light and 390px light and dark. Running `make e2e` clears `test-results/`, so run `make shots` last.
+`make showcase` regenerates the README screenshots in `docs/screenshots/` from a separate `demo` mailbox
+(`dev/seed/showcase.py`), so they never show test fixtures.
 
 The specs share one Roundcube user. Specs that change list prefs (sort, threads, page size) restore them, and
 `tests/e2e/global-setup.ts` plus `resetPrefs()` in `tests/e2e/helpers.ts` reset them before each run.

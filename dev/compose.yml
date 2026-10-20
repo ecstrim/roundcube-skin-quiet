@@ -9,7 +9,7 @@ services:
       GREENMAIL_OPTS: >-
         -Dgreenmail.setup.test.all
         -Dgreenmail.hostname=0.0.0.0
-        -Dgreenmail.users=klaus:klaus
+        -Dgreenmail.users=klaus:klaus,demo:demo
         -Dgreenmail.auth.disabled=false
 
   roundcube:

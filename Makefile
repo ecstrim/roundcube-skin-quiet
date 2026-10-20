@@ -3,7 +3,7 @@ LESS_SRC := skins/quiet/styles/styles.less
 # Roundcube image tag of the dev stack, and the source of Elastic's LESS (see "Upgrading Roundcube" in the skin README).
 export RC_TAG ?= 1.6.10-apache
 
-.PHONY: up down seed css e2e shots deps
+.PHONY: up down seed css e2e shots showcase deps
 
 up:
 	$(COMPOSE) up -d mail roundcube roundcube-plain dovecot roundcube-threads
@@ -40,4 +40,9 @@ e2e: deps
 	$(COMPOSE) run --rm e2e npx playwright test $(ARGS)
 
 shots: deps
-	$(COMPOSE) run --rm -e SHOTS=1 e2e npx playwright test tests/shots $(ARGS)
+	$(COMPOSE) run --rm -e SHOTS=1 e2e npx playwright test tests/shots/shots.spec.ts $(ARGS)
+
+# README screenshots into docs/screenshots/ (committed), from the separate `demo` mailbox.
+showcase: deps
+	$(COMPOSE) run --rm seed python showcase.py
+	$(COMPOSE) run --rm -e SHOTS=1 e2e npx playwright test tests/shots/showcase.spec.ts $(ARGS)
